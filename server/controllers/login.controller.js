@@ -2,8 +2,19 @@ import Users from "../models/user.model.js";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import Student from "../models/student.model.js";
-import { loginUser } from "../scripts/auth.js";
-import {readDocument} from "../scripts/firestore.js"
+import { 
+  loginUser,
+  logOut,
+ } from "../scripts/auth.js";
+import {
+  readDocument,
+  readCollection,
+} from "../scripts/firestore.js"
+import { 
+  authChangePassword, 
+  deleteUserByUID,
+  createUser,
+} from "../scripts/auth.js";
 // @Router: /login
 // @desc: user login
 // @access: public
@@ -12,10 +23,8 @@ export const login = async (req, res) => {
   const password = req.body.password;
 
   try {
-    // Gọi hàm loginUser từ firebaseAuth để thực hiện đăng nhập
     const loginResult = await loginUser(email, password);
 
-    // Kiểm tra kết quả và trả về response tương ứng
     if (!loginResult.error) {
       const userDoc = await readDocument('Users',loginResult.data);
       if(!userDoc.error){
@@ -24,16 +33,27 @@ export const login = async (req, res) => {
           const studentDoc = await readDocument('Students', loginResult.data);
           res.json({
             success: true,
-            message: "User logged in successfully",
+            message: "Student logged in successfully",
             userId: loginResult.data,
             role : userRole,
             lop : studentDoc.data.lop,
+            email: studentDoc.data.email,
+          });
+        }else if(userRole === "admin") {
+          const adminDoc = await readCollection(`Admins/${loginResult.data}/manage`)
+          const listlop = adminDoc.map(item => item.id).join(', ');
+          res.json({
+              success: true,
+              massage: "Admin logged in successfully",
+              userId: loginResult.data,
+              lop: listlop,
+              role : userRole,
           });
         }else{
           const teacherDoc = await readDocument('Teachers', loginResult.data)
           res.json({
             success: true,
-            message: "User logged in successfully",
+            message: "Teacher logged in successfully",
             userId: loginResult.data,
             lop: teacherDoc.data.management,
             role : userRole,
@@ -44,7 +64,7 @@ export const login = async (req, res) => {
       res.status(400).json({
         success: false,
         message: "Login failed",
-        error: loginResult.data.message, // Lưu ý: Dữ liệu lỗi có thể khác nhau dựa vào cách Firebase Auth trả về
+        error: loginResult.error,
       });
     }
   } catch (error) {
@@ -53,45 +73,51 @@ export const login = async (req, res) => {
   }
 };
 
+// @Router: /logout
+// @desc: user logout
+// @access: public
+export const logout = async (req, res)=>{
+  try{
+    const logoutResult = await logOut();
+    if(logoutResult.error){
+      res.status(400).json({
+        success: false,
+        message: "Logout failed",
+        error: logoutResult.error,
+      });
+    }
+  }catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+}
+
+
 // @Router: POST /create-student-account
-// @desc: Teacher create new account for student
-// @access: Only teacher can do
+// @desc: Admin create new account for student
+// @access: Only admin can do
 export const createStudentAccount = async (req, res) => {
   const { username, password, lop } = req.body;
 
   try {
-    // Check for existing user
-    const user = await Users.findOne({ username });
-
-    if (user)
-      return res
-        .status(400)
-        .json({ success: false, message: "Username already exist" });
-
-    // If user is ok -> save to the db
-    const hashedPassword = await argon2.hash(password);
-    const newUser = new Users({
-      username,
-      password: hashedPassword,
-      role: "student",
-      lop: lop,
-    });
-    await newUser.save();
-
-    // Return token
-    const accessToken = jwt.sign(
-      { userId: newUser._id },
-      process.env.ACCESS_TOKEN_SECRET
-    );
-
-    res.json({
-      success: true,
-      message: "User created successfully",
-      accessToken,
-    });
+    const create = await createUser(username, password);
+      if(!create.error){
+      res.json({
+        success: true,
+        message: "Student created successfully",
+        id: create.data,
+      });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "Failed to create student",
+          id: null,
+          error: create.error.message
+        });
+    }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: "Internal server error", id: null,});
   }
 };
 
@@ -108,28 +134,83 @@ export const deleteStudentAccount = async (req, res) => {
   }
 };
 
+
 export const changePassword = async (req, res) => {
   try {
-    const { username, old_pass, new_pass } = req.body;
-    const user = await Users.findOne({
-      username: username,
-    });
-    const verifiedPassword = await argon2.verify(user.password, old_pass);
-    console.log(verifiedPassword);
-    if (!verifiedPassword) {
-      return res.json({ message: "Mật khẩu cũ không đúng" });
+    const result = await authChangePassword(req.body.email, req.body.old_pass, req.body.new_pass);
+    if (result.error) {
+      res.json({massage: result.data});
     } else {
-      const UpdatedPassword = await Users.findOneAndUpdate(
-        { username: username },
-        { password: await argon2.hash(new_pass.toString()) }
-      );
-      if (UpdatedPassword) {
-        res.json({ message: "Thay đổi mật khẩu thành công" });
-      } else {
-        res.json({ message: "Thay đổi mật khẩu thất bại" });
-      }
+      res.json({massage: "Password changed successfully"});
     }
   } catch (error) {
-    res.status(500).json({ message: "Server error ~ changePassword" });
+    res.json({massage:"Error:", error});
   }
 };
+
+export  const createAdminAccount = async (req, res)=>{
+  const { username, password, lop } = req.body;
+  try {
+    const create = await createUser(username, password);
+      if(!create.error){
+      res.json({
+        success: true,
+        message: "Admin created successfully",
+        id: create.data,
+      });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "Failed to create Admin",
+          id: null,
+          error: create.error.message
+        });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error", id: null,});
+  }
+}
+
+export  const deleteAdminAccount = async (req, res)=>{
+  const data = await readDocument('Users', req.params.ID)
+  try{
+    const deleteAdmin = await deleteUserByUID(data.data.email, data.data.password)
+    if(deleteAdmin.error){
+      res.json({message: deleteAdmin.data})
+    }else{
+      res.json({message:"Delete admin account successfully"})
+    }
+  }catch(error){
+    res.json({message: "Error:", error})
+  }
+}
+
+export  const deleteTeacherAccount = async (req, res)=>{
+  
+}
+
+export  const createTeacherAccount = async (req, res)=>{
+  const { username, password, lop } = req.body;
+  
+  try {
+    const create = await createUser(username, password);
+      if(!create.error){
+      res.json({
+        success: true,
+        message: "Teacher created successfully",
+        id: create.data,
+      });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "Failed to create teacher",
+          id: null,
+          error: create.error.message
+        });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error", id: null,});
+  }
+}

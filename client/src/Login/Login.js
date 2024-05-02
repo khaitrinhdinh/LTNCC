@@ -141,7 +141,8 @@ class Login extends Component {
       localStorage.setItem("accessToken", response.data.accessToken);
       sessionStorage.setItem("role", response.data.role);
       sessionStorage.setItem("userId", response.data.userId);
-      sessionStorage.setItem("msv", response.data.username);
+      sessionStorage.setItem("email", response.data.email);
+      sessionStorage.setItem("mssv", response.data.mssv);
       sessionStorage.setItem("lop", response.data.lop);
       console.log(response);
       

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { HiKey } from "react-icons/hi";
 import { HiOutlineKey } from "react-icons/hi";
 import { MdOutlineVerified } from "react-icons/md";
+import { Redirect } from 'react-router-dom';
 import "../index.css";
 
 const ChangePassSite = styled.div`
@@ -83,7 +84,7 @@ class ChangePassword extends Component {
 
   onSubmit = () => {
     var { old_pass, new_pass, cf_new_pass } = this.state;
-    var username = sessionStorage.getItem("msv");
+    var email = sessionStorage.getItem("email");
 
     if (new_pass !== cf_new_pass) {
       alert("Xác nhận mật khẩu không khớp");
@@ -91,7 +92,7 @@ class ChangePassword extends Component {
       alert("Mật khẩu mới không được trùng mật khẩu cũ");
     } else {
       CallApi("change-password", "PATCH", {
-        username,
+        email,
         old_pass,
         new_pass,
       }).then((res) => {

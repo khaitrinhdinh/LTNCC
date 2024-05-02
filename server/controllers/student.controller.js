@@ -4,7 +4,15 @@ import xlsx from "xlsx";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import { readDocument, readCollection, getListStudent, deleteStudentByMSSV, getStudentByMSSV } from "../scripts/firestore.js";
+import { 
+  readDocument, 
+  readCollection,
+  getListStudent, 
+  deleteStudentByMSSV, 
+  getStudentByMSSV,
+  createDocumentWithId,
+ } from "../scripts/firestore.js";
+
 export const getAllStudent = async (req, res) => {
   try {
     const ListStudents = await getListStudent(req.params.lop);
@@ -36,40 +44,9 @@ export const updateStudent = async (req, res) => {
 
 export const createStudent = async (req, res) => {
   try {
-    const {
-      msv,
-      name,
-      birthday,
-      gender,
-      phone,
-      address,
-      sum_of_credits,
-      gpa,
-      status,
-      lop,
-    } = req.body;
-
-    const isExist = await Student.findOne({ msv });
-    if (isExist) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Student already exist!" });
-    }
-
-    const newStudent = new Student({
-      msv,
-      name,
-      birthday,
-      gender,
-      phone,
-      address,
-      sum_of_credits,
-      gpa,
-      status,
-      lop,
-    });
-    await newStudent.save();
-    console.log("Create successfully");
+    const { id, ...dataWithoutId } = req.body;
+    const createSt = await createDocumentWithId(`Students`, id, dataWithoutId);
+    res.json({message: "Create student successfully!"});
   } catch (error) {
     res.status(500).json({ message: "Server error ~ createStudent" });
   }
@@ -156,7 +133,7 @@ export const getStudentDetail = async (req, res) => {
 
 export const transcriptStudent = async (req, res) => {
   try {
-    const result = await readCollection('Students/GfdM5Tuv10bCVVKhKpJYqnort372/BANGDIEM');
+    const result = await readCollection(`Students/${req.params.id}/BANGDIEM`);
     if (result.error) {
       return res.status(500).json({ success: false, message: "Server error ~ transcriptStudent" });
     }

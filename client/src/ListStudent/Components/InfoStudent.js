@@ -106,7 +106,7 @@ class InfoStudent extends Component {
     var { match } = this.props;
     if (match) {
       var mssv = match.params.mssv;
-      console.log(match.params);
+      console.log(mssv);
       CallApi(`student/mssv/${mssv}`, "GET", null).then((res) => {
         console.log(res.data.studentData);
         this.setState({

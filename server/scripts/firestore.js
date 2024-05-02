@@ -54,11 +54,12 @@ export async function readDocument(path, id) {
   return payload;
 }
 
+// TODO: ReadCollection
 // In order to read all the documents in a collection, first find the collection path (as always) and then use getDocs to get the documents,
 export async function readCollection(path) {
   const collectionPath = collection(fireStore, path);
   const snapshot = await getDocs(collectionPath);
-  // After get the documents, we need to convert them to an array
+
   const documents = snapshot.docs.map((doc) => {
     return { id: doc.id, ... doc.data() };
   });
@@ -68,6 +69,7 @@ export async function readCollection(path) {
 // TODO: Update
 // use setDoc
 export async function updateDocument(path, id, data) {
+  console.log("okok");
   let payload = { message: null, error: null, loading: true };
   try {
     const documentPath = doc(fireStore, path, id);
@@ -145,3 +147,18 @@ export async function getStudentByMSSV(mssv) {
     return null;
   }
 }
+
+// TODO: Create Collection at Path
+export async function createCollectionAtPath(path, collectionName) {
+  try {
+    const collectionRef = collection(fireStore, path, collectionName);
+    await addDoc(collectionRef, {}); // Add an empty document to initialize the collection
+    console.log("Collection", collectionName, "created successfully at path", path);
+    return true;
+  } catch (error) {
+    console.error("Error creating collection at path", path, ":", error);
+    return false;
+  }
+}
+
+

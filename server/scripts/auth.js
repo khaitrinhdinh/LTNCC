@@ -3,6 +3,8 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
+    updatePassword,
+    deleteUser,
   } from "firebase/auth";
   
   // Project file
@@ -52,4 +54,33 @@ import {
     }
     return payload;
   }
-  
+
+  // Function to change the password of a user
+  export async function authChangePassword(email, oldPassword, newPassword) {
+    let payload = { data: undefined, error: false };
+    try {
+        const user = authentification.currentUser;
+        await updatePassword(user, newPassword);
+        payload.data = true;
+    } catch (error) {
+      payload = { data: error, error: true };
+    }
+    return payload;
+  }
+
+  export async function deleteUserByUID(email, password) {
+    let payload = { data: undefined, error: false };
+    const userCredential = await signInWithEmailAndPassword(
+      authentification,
+      email,
+      password,
+    );
+    try {
+      await deleteUser(userCredential.user);
+      payload.data = true;
+      logOut();
+    } catch (error) {
+      payload = { data: error, error: true };
+    }
+    return payload;
+  }

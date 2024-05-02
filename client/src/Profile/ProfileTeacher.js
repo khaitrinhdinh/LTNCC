@@ -24,6 +24,7 @@ const Infor_site = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
   background-color: whitesmoke;
+  margin: auto;
 `;
 const Infor = styled.div`
   display: flex;
@@ -50,29 +51,6 @@ const Title_infor = styled.p`
   text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3),
     0px -4px 10px rgba(255, 255, 255, 0.3);
 `;
-const Title_gpa = styled.p`
-  font-size: 2.5rem;
-  // width: 50%;
-  // margin: auto;
-  padding-bottom: 20px;
-  font-weight: bold;
-  //text-align: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3),
-    0px -4px 10px rgba(255, 255, 255, 0.3);
-`;
-const Gpa_site = styled.div`
-  // border: 1px solid black;
-  background-color: whitesmoke;
-  border-radius: 10px;
-  width: 30%;
-  padding: 2rem 3rem;
-  margin-left: 5%;
-  height: 50vh;
-  align-items: center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  text-align: center;
-`;
 const Site = styled.div`
   display: flex;
   margin-top: 10%;
@@ -83,19 +61,17 @@ const Btn_site = styled.div`
   text-align: center;
 `;
 
-class InfoStudent extends Component {
+class InfoTeacher extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      msv: "",
+      ID: "",
       name: "",
       birthday: "",
       gender: "",
       phone: "",
+      email: "",
       address: "",
-      sum_of_credits: 0,
-      gpa: 0,
-      status: "",
       lop: "",
     };
   }
@@ -104,18 +80,16 @@ class InfoStudent extends Component {
     var { match } = this.props;
     if (match) {
       var id = sessionStorage.getItem("userId");
-      CallApi(`student/${id}`, "GET", null).then((res) => {
-        var data = res.data.studentData;
+      CallApi(`teacher/${id}`, "GET", null).then((res) => {
+        var data = res.data.TeacherDetail;
         this.setState({
-          msv: data.mssv,
+          ID: data.ID,
           name: data.name,
           birthday: data.birthday,
           gender: data.gender,
           phone: data.phone,
+          email: data.email,
           address: data.address,
-          sum_of_credits: data.sum_of_credits,
-          gpa: data.gpa,
-          status: data.status,
           lop: data.lop,
         });
       });
@@ -134,11 +108,12 @@ class InfoStudent extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     var id = sessionStorage.getItem("userId");
-    CallApi(`student/update/${id}`, "PATCH", {
+    CallApi(`teacher/update/${id}`, "PATCH", {
       name: this.state.name,
       birthday: this.state.birthday,
       gender: this.state.gender,
       phone: this.state.phone,
+      email: this.state.email,
       address: this.state.address,
     }).then((res) => {
       alert("Cập nhật thành công");
@@ -147,15 +122,13 @@ class InfoStudent extends Component {
 
   render() {
     var {
-      msv,
+      ID,
       name,
       birthday,
       gender,
       phone,
+      email,
       address,
-      sum_of_credits,
-      gpa,
-      status,
       lop,
     } = this.state;
     return (
@@ -174,8 +147,8 @@ class InfoStudent extends Component {
                 />
               </Image_div>
               <Left_div>
-                <p>Mã số sinh viên: </p>
-                <label>{msv}</label>
+                <p>Mã giảng viên: </p>
+                <label>{ID}</label>
                 <p>Giới tính:</p>
                 <label>{gender}</label>
                 <p style={{ marginTop: "10px" }}>Họ và tên: </p>
@@ -197,7 +170,6 @@ class InfoStudent extends Component {
               </Left_div>
               <Right_div>
                 <p>Lớp: </p>
-                {/* <label> {lop} </label> */}
                 <label> {lop} </label>
                 <p>SĐT: </p>
                 <input
@@ -205,6 +177,14 @@ class InfoStudent extends Component {
                   type='text'
                   name='phone'
                   placeholder={phone}
+                  onChange={this.onChange}
+                />
+                <p>Email: </p>
+                <input
+                  style={{ width: "90%" }}
+                  type='text'
+                  name='email'
+                  placeholder={email}
                   onChange={this.onChange}
                 />
                 <p style={{ marginTop: "10px" }}>Địa chỉ: </p>
@@ -221,33 +201,8 @@ class InfoStudent extends Component {
               </Right_div>
             </Infor>
           </Infor_site>
-          <Gpa_site>
-            <Title_gpa>Điểm số</Title_gpa>
-            <p>Tổng số tín chỉ đã đăng ký:</p>
-            {/* <label>{sum_of_credits}/158</label> */}
-            <label>47</label>
-            <br />
-            <progress min='0' max='158' value={sum_of_credits}></progress>
-            <p style={{ marginTop: "30px" }}>Điểm trung bình :</p>
-            <label>{gpa}</label>
-            <p>Trạng thái: </p>
-            <label
-              className={
-                status === "Khen thưởng" || status === "Không"
-                  ? "change_status_green"
-                  : "change_status_red"
-              }>
-              {status}
-            </label>
-          </Gpa_site>
         </Site>
         <Btn_site>
-          {/* <Link
-            to='/home/list-students'
-            className='goback btn btn-danger'
-            style={{ marginRight: "20px" }}>
-            <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
-          </Link> */}
           <button
             type='submit'
             className='btn btn-primary custom'
@@ -266,4 +221,4 @@ class InfoStudent extends Component {
     );
   }
 }
-export default InfoStudent;
+export default InfoTeacher;

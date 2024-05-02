@@ -13,13 +13,14 @@ class ListStudent extends Component {
       students: [],
       lop: [],
       item: sessionStorage.getItem("lop"),
+      role: sessionStorage.getItem("role"),
     };
   }
   componentDidMount() {
     this.setState({
       lop: sessionStorage.getItem("lop").split(", "),
     });
-    var item = sessionStorage.getItem("lop");
+    var item = this.state;
     CallApi(`student/all/${item}`, "GET", null).then((res) => {
       if (res.data.ListStudents != null) {
         this.setState({
@@ -59,7 +60,6 @@ class ListStudent extends Component {
   };
 
   onDelete = (_id, mssv) => {
-    console.log(mssv);
     CallApi(`student/delete/${mssv}`, "DELETE", null).then((res) => {
       if (res.status === 200) {
         window.location.reload();
@@ -109,17 +109,6 @@ class ListStudent extends Component {
           <Link to='/home/list-students/add' className='btn btn-primary custom'>
             <span className='fa fa-plus'></span> &nbsp; Thêm sinh viên
           </Link>{" "}
-          &nbsp;
-          {/* <div className='data'>
-            <ExportToExcel apiData={students} fileName={this.state.item} />
-          </div>
-          &nbsp;
-          <Link
-            to='/home/list-students/import-data'
-            className='btn btn-primary data'>
-            <span className='fa fa-file-import'></span>&nbsp; Nhập dữ liệu từ
-            Excel
-          </Link> */}
           <div className='row'>
             <div className='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
               <ListSV students={students} onDelete={this.onDelete} />
