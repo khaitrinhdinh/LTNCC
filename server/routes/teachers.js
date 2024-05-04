@@ -1,5 +1,4 @@
 import express from "express";
-import { upload } from "../midleware/upload.midleware.js";
 
 import {
   createTeacher,
@@ -8,7 +7,6 @@ import {
   getTeacherDetail,
   updateTeacher,
 } from "../controllers/teacher.controller.js";
-import multer from "multer";
 
 const router = express.Router();
 

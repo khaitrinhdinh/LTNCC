@@ -15,7 +15,7 @@ class AddForm3 extends Component {
       phone: "",
       email: "",
       address: "",
-      management: "",
+      khoa: "",
     };
   }
 
@@ -38,35 +38,47 @@ class AddForm3 extends Component {
       if(res.data.id!=null){
         this.setState({
           id: res.data.id,
+        }, ()=>{
+          CallApi("admin/create", "POST", {
+            ID: this.state.ID,
+            id: this.state.id,
+            name: this.state.name,
+            birthday: this.state.birthday,
+            gender: this.state.gender,
+            phone: this.state.phone,
+            email: this.state.email,
+            address: this.state.address,
+            khoa: this.state.khoa,
+          }). then(()=>{
+            this.setState({
+              ID: "",
+              id:"",
+              name: "",
+              birthday: "",
+              gender: "",
+              phone: "",
+              email: "",
+              address: "",
+              khoa: "",
+            });
+          });
         })
       }
-    });
-    CallApi("admin/create", "POST", {
-      ID: this.state.ID,
-      id: this.state.id,
-      name: this.state.name,
-      birthday: this.state.birthday,
-      gender: this.state.gender,
-      phone: this.state.phone,
-      email: this.state.email,
-      address: this.state.address,
-      lop: this.state.lop,
-    });
-
-    this.setState({
-      ID: "",
-      name: "",
-      birthday: "",
-      gender: "",
-      phone: "",
-      email: "",
-      address: "",
-      lop: "",
-    });
+    })
     alert("Đã thêm thành công");
   };
 
   render() {
+    const khoaOptions = [
+      "KHOA CƠ KHÍ",
+      "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ",
+      "KHOA ĐIỆN - ĐIỆN TỬ",
+      "KHOA KỸ THUẬT GIAO THÔNG",
+      "KHOA KỸ THUẬT HÓA HỌC",
+      "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN",
+      "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH",
+    ];
+
     return (
       <div className="addForm">
         <div className="back">
@@ -147,15 +159,18 @@ class AddForm3 extends Component {
                     onChange={this.onChange}
                   />
                   <label>Khoa:</label>
-                  <input
-                    placeholder="vd: Máy tính"
-                    type="text"
+                  <select
                     className="form-control"
                     required
-                    name="lop"
-                    value={this.state.lop}
+                    name="khoa"
+                    value={this.state.khoa}
                     onChange={this.onChange}
-                  />
+                  >
+                    <option value="">-- Chọn khoa --</option>
+                    {khoaOptions.map((khoa, index) => (
+                      <option key={index} value={khoa}>{khoa}</option>
+                    ))}
+                  </select>
                   <br />
                   <div className="text_center">
                     <button

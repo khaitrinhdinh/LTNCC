@@ -4,7 +4,7 @@ import "./Chat.css";
 
 export const Chat = () => {
   const [transcripts, setTranscripts] = useState([]);
-  const [cumulativeCredits, setCumulativeCredits] = useState(0); // State để lưu trữ tổng số tín chỉ tích lũy
+  const [cumulativeCredits, setCumulativeCredits] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {

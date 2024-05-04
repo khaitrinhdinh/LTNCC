@@ -149,7 +149,7 @@ class ChangePassword extends Component {
         <Btn type='submit' className='btn btn-primary custom' onClick={this.onSubmit}>
           <btnName className='fa fa-save'>&nbsp;</btnName> Ghi nhận
         </Btn>{" "}
-        <Link to='/home/profile' className='btn btn-danger'>
+        <Link to='/home' className='btn btn-danger'>
           <btnName className='fa fa-close'>&nbsp; Hủy bỏ</btnName>
         </Link>
       </ChangePassSite>

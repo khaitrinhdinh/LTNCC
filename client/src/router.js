@@ -16,7 +16,9 @@ import ProfileTeacher from "./Profile/ProfileTeacher";
 import InfoAdmin from "./ListAdmin/Components/InfoAdmin";
 import AddForm3 from "./ListAdmin/Components/AddForm";
 import ListAdmin from "./ListAdmin/ListAdmin";
-
+import Course from "./Course/course";
+import InfoClassStudent from "./Course/Components/listClass";
+import InfoCourse from "./Course/Components/InfoCourse";
 const routes = [
   {
     path: "/home/notification",
@@ -94,6 +96,21 @@ const routes = [
     main: ({ match }) => <ProfileTeacher match={match} />,
   },
   {
+    path: "/home/manage-courses",
+    exact: true,
+    main: () => <Course/>,
+  },
+  {
+    path: "/monhoc/:mamonhoc",
+    exact: true,
+    main: ({ match, lop }) => <InfoCourse match={match} lop={lop} />,
+  },
+  {
+    path: "/home/class/student/:mamonhoc/:lop",
+    exact: true,
+    main: ({match}) => <InfoClassStudent match = {match}/>,
+  },
+  {
     path: "/home",
     exact: true,
     main: () => <Home />,
@@ -102,7 +119,7 @@ const routes = [
     path: "/home/change-password",
     exact: true,
     main: () => <ChangePassword />,
-  },
+  }
 ];
 
 export default routes;

@@ -1,22 +1,17 @@
 import express from "express";
-import { verifyToken } from "../midleware/login.midleware.js";
-import { upload } from "../midleware/upload.midleware.js";
-import XLSX from "xlsx";
 import {
   createStudent,
   deleteStudent,
   getAllStudent,
   getStudentDetail,
-  importFromExcel,
   updateStudent,
   transcriptStudent,
-  getStudentM
+  getStudentM,
+  getCourse,
+  getClass,
 } from "../controllers/student.controller.js";
-import multer from "multer";
 
 const router = express.Router();
-
-router.post("/student/create/import", upload.single("myFile"), importFromExcel);
 
 router.patch("/student/update/:id", updateStudent);
 
@@ -28,7 +23,9 @@ router.delete("/student/delete/:mssv", deleteStudent);
 router.get("/student/:id", getStudentDetail);
 router.get("/student/transtranscript/:id", transcriptStudent)
 router.get("/student/mssv/:id", getStudentM)
-
+//Get course
+router.get("/student/allcourse/:id", getCourse)
+router.get("/student/class/:mmh/:lop", getClass)
 // Get all students in a class
 router.get("/student/all/:lop", getAllStudent);
 

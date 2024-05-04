@@ -21,11 +21,11 @@ class ListAD extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   this.setState({
-  //     admins: this.props.admins,
-  //   });
-  // }
+  componentDidMount() {
+    this.setState({
+      admins: this.props.admins,
+    });
+  }
 
   onDelete = (_id, ID) => {
     this.props.onDelete(_id, ID);

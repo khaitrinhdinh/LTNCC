@@ -1,5 +1,3 @@
-import Posts from "../models/post.model.js";
-
 export const getPost = async (req, res) => {
   try {
     const getpost = await Posts.find({ lop: req.params.item }).select("-lop");

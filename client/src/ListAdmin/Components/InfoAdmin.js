@@ -176,8 +176,8 @@ class InfoAdmin extends Component {
                 />
               </Left_div>
               <Right_div>
-              <p>Lớp:</p>
-                <label>{admin.lop}</label>
+              <p>KHOA:</p>
+                <label>{admin.khoa}</label>
                 <p style={{ marginTop: "10px" }}>SĐT: </p>
                 <input
                   type='text'

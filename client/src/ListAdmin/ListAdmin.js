@@ -40,6 +40,7 @@ class ListAdmin extends Component {
 
   onDelete = (_id, ID) => {
     var { admins } = this.state;
+    CallApi(`delete-admin-account/${_id}`, "DELETE", null);
     CallApi(`admin/delete/${_id}`, "DELETE", null).then((res) => {
       if (res.status === 200) {
         var index = this.findIndex(_id);
@@ -52,7 +53,6 @@ class ListAdmin extends Component {
         window.location.reload();
       }
     });
-    CallApi(`delete-admin-account/${_id}`, "DELETE", null);
   };
  
   render() {

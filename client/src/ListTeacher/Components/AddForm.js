@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CallApi from "../../API/CallApi";
-import axios from "axios";
 
 class AddForm2 extends Component {
   constructor(props) {
@@ -16,6 +15,7 @@ class AddForm2 extends Component {
       email: "",
       address: "",
       lop: "",
+      khoa: "",
     };
   }
 
@@ -38,35 +38,50 @@ class AddForm2 extends Component {
       if(res.data.id != null){
         this.setState({
           id: res.data.id,
+        }, () => {
+          console.log(this.state.id);
+          CallApi("teacher/create", "POST", {
+            ID: this.state.ID,
+            id: this.state.id,
+            name: this.state.name,
+            birthday: this.state.birthday,
+            gender: this.state.gender,
+            phone: this.state.phone,
+            email: this.state.email,
+            address: this.state.address,
+            management: this.state.lop,
+            khoa: this.state.khoa,
+          }).then(()=>{
+            this.setState({
+              ID: "",
+              id: "",
+              name: "",
+              birthday: "",
+              gender: "",
+              phone: "",
+              email: "",
+              address: "",
+              lop: "",
+              khoa: "", // Reset trường "khoa"
+            });
+          });
         });
       }
-    });
-    CallApi("teacher/create", "POST", {
-      ID: this.state.ID,
-      id: this.state.id,
-      name: this.state.name,
-      birthday: this.state.birthday,
-      gender: this.state.gender,
-      phone: this.state.phone,
-      email: this.state.email,
-      address: this.state.address,
-      lop: this.state.lop,
-    });
-
-    this.setState({
-      ID: "",
-      name: "",
-      birthday: "",
-      gender: "",
-      phone: "",
-      email: "",
-      address: "",
-      lop: "",
     });
     alert("Đã thêm thành công");
   };
 
   render() {
+    const khoaOptions = [
+      "KHOA CƠ KHÍ",
+      "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ",
+      "KHOA ĐIỆN - ĐIỆN TỬ",
+      "KHOA KỸ THUẬT GIAO THÔNG",
+      "KHOA KỸ THUẬT HÓA HỌC",
+      "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN",
+      "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH",
+    ];
+
     return (
       <div className="addForm">
         <div className="back">
@@ -156,6 +171,19 @@ class AddForm2 extends Component {
                     value={this.state.lop}
                     onChange={this.onChange}
                   />
+                  <label>Khoa:</label>
+                  <select
+                    className="form-control"
+                    required
+                    name="khoa"
+                    value={this.state.khoa}
+                    onChange={this.onChange}
+                  >
+                    <option value="">-- Chọn khoa --</option>
+                    {khoaOptions.map((khoa, index) => (
+                      <option key={index} value={khoa}>{khoa}</option>
+                    ))}
+                  </select>
                   <br />
                   <div className="text_center">
                     <button

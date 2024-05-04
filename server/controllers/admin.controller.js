@@ -1,15 +1,12 @@
-import Admin from "../models/admin.model.js";
 import { 
   readCollection,
   readDocument,
   deleteDocument,
   createDocumentWithId,
   createCollectionAtPath,
+  updateDocument,
 } from "../scripts/firestore.js";
 
-const headers = {
-  "PRIVATE-KEY": "14bf1d3f-a86c-4b1b-ad74-9675722ee4f8",
-};
 export const getAllAdmin = async (req,res) => {
   try {
     const ListAdmins = await readCollection('Admins');
@@ -26,6 +23,7 @@ export const getAllAdmin = async (req,res) => {
 export const createAdmin = async (req, res) => {
   try {
     const { id, ...dataWithoutId } = req.body;
+    console.log(id);
     const createAd = await createDocumentWithId(`Admins`, id, dataWithoutId);
     createCollectionAtPath(`Admins/${id}`, 'manage');
     res.json({message: "Create admin successfully!"});
@@ -37,12 +35,9 @@ export const createAdmin = async (req, res) => {
 export const updateAdmin = async (req, res) => {
     try {
       console.log(req.body);
-      const { name, birthday, gender, phone, email, address } = req.body;
-      const updatedAdmin = await Admin.findByIdAndUpdate(
-        { _id: req.params.id },
-        { name, birthday, gender, phone, email, address }
-      );
-      if (updatedAdmin) {
+      const { name, birthday, phone, email, address } = req.body;
+      const updatedAdmin = await updateDocument(`Admins`,req.params.id,req.body);
+      if (!updatedAdmin.error) {
         res.json({ message: "Update successfully" });
       } else {
         res.json({ message: "Update fail" });

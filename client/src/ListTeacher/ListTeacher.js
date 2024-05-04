@@ -40,6 +40,7 @@ class ListTeacher extends Component {
   onDelete = (_id, ID) => {
     var { teachers } = this.state;
     console.log(_id)
+    CallApi(`delete-teacher-account/${_id}`, "DELETE", null);
     CallApi(`teacher/delete/${_id}`, "DELETE", null).then((res) => {
       if (res.status === 200) {
         var index = this.findIndex(_id);
@@ -49,9 +50,9 @@ class ListTeacher extends Component {
             teachers: teachers,
           });
         }
+        window.location.reload();
       }
     });
-    CallApi(`delete-teacher-account/${ID}`, "DELETE", null);
   };
  
   render() {

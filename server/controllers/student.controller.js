@@ -1,9 +1,3 @@
-import Student from "../models/student.model.js";
-import Users from "../models/user.model.js";
-import xlsx from "xlsx";
-import argon2 from "argon2";
-import jwt from "jsonwebtoken";
-import axios from "axios";
 import { 
   readDocument, 
   readCollection,
@@ -53,7 +47,6 @@ export const createStudent = async (req, res) => {
 };
 
 export const deleteStudent = async (req, res) => {
-  // const userID = req.params.id;
   try {
     const deletedStudent = await deleteStudentByMSSV(req.params.mssv);
     if (deletedStudent) {
@@ -65,56 +58,7 @@ export const deleteStudent = async (req, res) => {
     res.status(500).json({ message: "Server error ~ deleteStudent" });
   }
 };
-export const importFromExcel = async (req, res) => {
-  try {
-    const wb = xlsx.readFile("./uploads/import.xlsx", { cellDates: true });
-    const ws = wb.Sheets["Sheet1"];
-    const dataStudent = xlsx.utils.sheet_to_json(ws);
-    console.log(dataStudent);
-    const dataUser = [];
 
-    // for (let i = 0; i < dataStudent.length; i++) {
-    //   dataUser.push({
-    //     username: dataStudent[i].msv,
-    //     password: await argon2.hash(dataStudent[i].msv.toString()),
-    //     lop: dataStudent[i].lop,
-    //   });
-    // }
-
-    for (let i = 0; i < dataStudent.length; i++) {
-      dataUser[i] = new Users({
-        username: dataStudent[i].msv,
-        password: await argon2.hash(dataStudent[i].msv.toString()),
-        lop: dataStudent[i].lop,
-      });
-      //await dataUser[i].save();
-      jwt.sign({ userId: dataUser[i]._id }, process.env.ACCESS_TOKEN_SECRET);
-
-      // axios.post(
-      //   "https://api.chatengine.io/users/",
-      //   {
-      //     username: dataStudent[i].msv.toString(),
-      //     secret: dataStudent[i].msv.toString(),
-      //   },
-      //   {
-      //     headers: headers,
-      //   }
-      // );
-    }
-    //   console.log(dataUser);
-
-    // const isCreatedUser = await Users.insertMany(dataUser);
-
-    const isImported = await Student.insertMany(dataStudent);
-    if (isImported) {
-      res.send("Import successfully");
-    } else {
-      res.send("Import fail");
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Server error ~ importFromExcel" });
-  }
-};
 
 export const getStudentDetail = async (req, res) => {
   try {
@@ -150,6 +94,7 @@ export const transcriptStudent = async (req, res) => {
 export const getStudentM = async(req, res) => {
   try {
     const data = await getStudentByMSSV(req.params.id);
+    console.log(data);
     if (data.error) {
       res.status(500).json({ success: false, message: "Server error ~ getStudentDetail" });
     } else if (data) {
@@ -159,5 +104,32 @@ export const getStudentM = async(req, res) => {
     }
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error ~ getStudentDetail" });
+  }
+}
+
+export const getCourse = async(req, res)=>{
+  try{
+    const getCourseResult = await readCollection(`Students/${req.params.id}/MONHOC`)
+    if(getCourseResult.error){
+      res.status(500).json({ success: false, message: "Can't read collection MONHOC"})
+    }else{
+      console.log(getCourseResult)
+      res.json({listCourse: getCourseResult})
+    }
+  } catch{
+    res.status(500).json({ success: false, message: "Server error ~ getCourse" });
+  }
+}
+export const getClass = async (req, res) => {
+  console.log("okok");
+  try{
+    const {data, error} = await readDocument(`Courses/${req.params.mmh}/DANHSACHLOP`,req.params.lop)
+    if(error){
+      res.status(500).json({ success: false, message: "Can't read collection class"})
+    }else{
+      res.json({class: data});
+    }
+  }catch{
+
   }
 }

@@ -73,6 +73,7 @@ class InfoTeacher extends Component {
       email: "",
       address: "",
       lop: "",
+      khoa: "",
     };
   }
 
@@ -90,7 +91,8 @@ class InfoTeacher extends Component {
           phone: data.phone,
           email: data.email,
           address: data.address,
-          lop: data.lop,
+          lop: data.management,
+          khoa: data.khoa,
         });
       });
     }
@@ -109,6 +111,9 @@ class InfoTeacher extends Component {
     event.preventDefault();
     var id = sessionStorage.getItem("userId");
     CallApi(`teacher/update/${id}`, "PATCH", {
+      ID: this.state.ID,
+      management: this.state.lop,
+      khoa: this.state.khoa,
       name: this.state.name,
       birthday: this.state.birthday,
       gender: this.state.gender,
@@ -117,6 +122,7 @@ class InfoTeacher extends Component {
       address: this.state.address,
     }).then((res) => {
       alert("Cập nhật thành công");
+      window.location.reload();
     });
   };
 
@@ -130,6 +136,7 @@ class InfoTeacher extends Component {
       email,
       address,
       lop,
+      khoa,
     } = this.state;
     return (
       <div className='container'>

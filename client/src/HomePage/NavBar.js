@@ -25,6 +25,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     };
   }
 
@@ -84,7 +85,21 @@ class NavBar extends Component {
       chooseProfileTeacher: false,
     });
   };
-
+  chooseManageCourses = () => {
+    this.setState({
+      chooseHome: false,
+      chooseNoti: false,
+      chooseChat: false,
+      chooseListStudent: false,
+      chooseListTeacher: false,
+      chooseListAdmin: false,
+      chooseChart: false,
+      chooseProfile: false,
+      chooseProfileAdmin: false,
+      chooseProfileTeacher: false,
+      chooseManageCourses: true,
+    });
+  };
   chooseListStudent = () => {
     this.setState({
       chooseHome: false,
@@ -213,6 +228,7 @@ class NavBar extends Component {
       chooseProfile,
       chooseProfileTeacher,
       chooseProfileAdmin,
+      chooseManageCourses,
     } = this.state;
     console.log(role);
     if (role === "student") {
@@ -256,6 +272,20 @@ class NavBar extends Component {
                 </Link>
                 <span className='tooltip'>Thông Báo</span>
               </li>
+              <li
+                className={chooseManageCourses ? "home" : ""}
+                onClick={this.chooseManageCourses}
+              >
+              <Link to="/home/manage-courses">
+                <ul>
+                  <div className="icon">
+                    <span className="fa fa-book"></span>{" "}
+                  </div>
+                  <span className="links_name">Quản lí môn học</span>
+                </ul>
+              </Link>
+              <span className="tooltip">Quản lí môn học</span>
+            </li>
               <li
                 className={chooseChat ? "home" : ""}
                 onClick={this.chooseChat}>

@@ -1,5 +1,4 @@
 import express from "express";
-import { upload } from "../midleware/upload.midleware.js";
 
 import {
   createAdmin,
@@ -8,7 +7,7 @@ import {
   getAdminDetail,
   updateAdmin,
 } from "../controllers/admin.controller.js";
-import multer from "multer";
+
 
 const router = express.Router();
 

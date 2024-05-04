@@ -96,7 +96,6 @@ class ListSV extends Component {
     if (sort) {
       if (sort.by === "mssv") {
         students.sort((student1, student2) => {
-          //console.log(typeof student1.name,'-',student2.name);
           if (student1.mssv > student2.mssv) return sort.value;
           else if (student1.mssv < student2.mssv) return -sort.value;
           else return 0;

@@ -57,6 +57,7 @@ export async function readDocument(path, id) {
 // TODO: ReadCollection
 // In order to read all the documents in a collection, first find the collection path (as always) and then use getDocs to get the documents,
 export async function readCollection(path) {
+  console.log(path);
   const collectionPath = collection(fireStore, path);
   const snapshot = await getDocs(collectionPath);
 
@@ -69,10 +70,10 @@ export async function readCollection(path) {
 // TODO: Update
 // use setDoc
 export async function updateDocument(path, id, data) {
-  console.log("okok");
   let payload = { message: null, error: null, loading: true };
   try {
     const documentPath = doc(fireStore, path, id);
+    console.log(documentPath);
     await setDoc(documentPath, data);
     payload = { message: "updated successfully", error: null, loading: false };
   } catch (error) {
@@ -112,8 +113,8 @@ export async function getListStudent(className){
     return [];
   }
 }
-// TODO: deleteStudent
 
+// TODO: deleteStudent
 export async function deleteStudentByMSSV(mssv) {
   try {
     const studentsRef = collection(fireStore, 'Students');

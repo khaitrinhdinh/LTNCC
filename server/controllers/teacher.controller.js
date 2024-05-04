@@ -1,12 +1,10 @@
-import Teacher from "../models/teacher.model.js";
 import { 
   readCollection, 
   readDocument,
   createDocumentWithId, 
+  deleteDocument,
+  updateDocument,
 } from "../scripts/firestore.js";
-const headers = {
-  "PRIVATE-KEY": "14bf1d3f-a86c-4b1b-ad74-9675722ee4f8",
-};
 export const getAllTeacher = async (req,res) => {
   try {
     const ListTeachers = await readCollection('Teachers');
@@ -21,12 +19,8 @@ export const getAllTeacher = async (req,res) => {
 
 export const updateTeacher = async (req, res) => {
   try {
-    console.log(req.body);
     const { name, birthday, gender, phone, email, address } = req.body;
-    const updatedTeacher = await Teacher.findByIdAndUpdate(
-      { _id: req.params.id },
-      { name, birthday, gender, phone, email, address }
-    );
+    const updatedTeacher = await updateDocument(`Teachers`, req.params.id, req.body);
     if (updatedTeacher) {
       res.json({ message: "Update successfully" });
     } else {
@@ -39,6 +33,7 @@ export const updateTeacher = async (req, res) => {
 
 export const createTeacher = async (req, res) => {
   try {
+    console.log(req.body);
     const { id, ...dataWithoutId } = req.body;
     const createTc = await createDocumentWithId(`Teachers`, id, dataWithoutId);
     res.json({message: "Create teacher successfull"});
@@ -48,18 +43,16 @@ export const createTeacher = async (req, res) => {
 };
 
 export const deleteTeacher = async (req, res) => {
-  // const userID = req.params.id;
-  try {
-    const deletedTeacher = await Teacher.findOneAndDelete({
-      _id: req.params.id,
-    });
-    if (deletedTeacher) {
+  console.log(req.params.id);
+  try { 
+    const deleteTeacher = await deleteDocument('Teachers', req.params.id);
+    if (deleteTeacher) {
       res.json({ success: true, message: "Deleted successfully!" });
     } else {
       res.status(404).json({ success: false, message: "Deleted fail!" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Server error ~ deleteTeacher" });
+    res.status(500).json({ message: "Server error ~ delete teacher" });
   }
 };
 

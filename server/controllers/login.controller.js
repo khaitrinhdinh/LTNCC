@@ -1,7 +1,3 @@
-import Users from "../models/user.model.js";
-import argon2 from "argon2";
-import jwt from "jsonwebtoken";
-import Student from "../models/student.model.js";
 import { 
   loginUser,
   logOut,
@@ -9,12 +5,15 @@ import {
 import {
   readDocument,
   readCollection,
+  createDocumentWithId,
+  deleteDocument,
 } from "../scripts/firestore.js"
 import { 
   authChangePassword, 
   deleteUserByUID,
   createUser,
 } from "../scripts/auth.js";
+
 // @Router: /login
 // @desc: user login
 // @access: public
@@ -38,6 +37,7 @@ export const login = async (req, res) => {
             role : userRole,
             lop : studentDoc.data.lop,
             email: studentDoc.data.email,
+            mssv: studentDoc.data.mssv,
           });
         }else if(userRole === "admin") {
           const adminDoc = await readCollection(`Admins/${loginResult.data}/manage`)
@@ -97,10 +97,11 @@ export const logout = async (req, res)=>{
 // @desc: Admin create new account for student
 // @access: Only admin can do
 export const createStudentAccount = async (req, res) => {
-  const { username, password, lop } = req.body;
-
+  req.body.role = 'student';
+  const { username, password, role} = req.body;
   try {
     const create = await createUser(username, password);
+    createDocumentWithId('Users',create.data,req.body)
       if(!create.error){
       res.json({
         success: true,
@@ -122,15 +123,17 @@ export const createStudentAccount = async (req, res) => {
 };
 
 export const deleteStudentAccount = async (req, res) => {
-  try {
-    const acc = await Users.findOneAndDelete({ username: req.params.msv });
-    if (acc) {
-      res.json({ message: "Delete successfully" });
-    } else {
-      res.json({ message: "Delete fail" });
+  const data = await readDocument('Users', req.params.ID)
+  try{
+    const deleteStudent = await deleteUserByUID(data.data.username, data.data.password)
+    if(deleteStudent.error){
+      res.json({message: deleteStudent.error})
+    }else{
+      deleteDocument('Users',req.params.ID);
+      res.json({message:"Delete student account successfully"})
     }
-  } catch (error) {
-    res.status(500).json({ message: "Server error ~ deleteStudentAccount" });
+  }catch(error){
+    res.json({message: "Error:", error})
   }
 };
 
@@ -149,9 +152,11 @@ export const changePassword = async (req, res) => {
 };
 
 export  const createAdminAccount = async (req, res)=>{
-  const { username, password, lop } = req.body;
+  req.body.role = 'admin';
+  const { username, password, role } = req.body;
   try {
     const create = await createUser(username, password);
+    createDocumentWithId('Users',create.data,req.body)
       if(!create.error){
       res.json({
         success: true,
@@ -175,10 +180,11 @@ export  const createAdminAccount = async (req, res)=>{
 export  const deleteAdminAccount = async (req, res)=>{
   const data = await readDocument('Users', req.params.ID)
   try{
-    const deleteAdmin = await deleteUserByUID(data.data.email, data.data.password)
+    const deleteAdmin = await deleteUserByUID(data.data.username, data.data.password)
     if(deleteAdmin.error){
-      res.json({message: deleteAdmin.data})
+      res.json({message: deleteAdmin.error})
     }else{
+      deleteDocument('Users',req.params.ID);
       res.json({message:"Delete admin account successfully"})
     }
   }catch(error){
@@ -187,14 +193,27 @@ export  const deleteAdminAccount = async (req, res)=>{
 }
 
 export  const deleteTeacherAccount = async (req, res)=>{
-  
+  const data = await readDocument('Users', req.params.ID)
+  try{
+    const deleteTeacher = await deleteUserByUID(data.data.username, data.data.password)
+    if(deleteTeacher.error){
+      res.json({message: deleteTeacher.error})
+    }else{
+      deleteDocument('Users',req.params.ID);
+      res.json({message:"Delete teacher account successfully"})
+    }
+  }catch(error){
+    res.json({message: "Error:", error})
+  }
 }
 
 export  const createTeacherAccount = async (req, res)=>{
-  const { username, password, lop } = req.body;
+  req.body.role = 'teacher';
+  const { username, password, role} = req.body;
   
   try {
     const create = await createUser(username, password);
+    createDocumentWithId('Users',create.data,req.body)
       if(!create.error){
       res.json({
         success: true,

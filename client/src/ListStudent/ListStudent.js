@@ -5,7 +5,6 @@ import "./ListStudent.css";
 import ListSV from "./Components/ListSV";
 import { Link } from "react-router-dom";
 import CallApi from "../API/CallApi";
-import ExportToExcel from "./Components/ExportData";
 class ListStudent extends Component {
   constructor(props) {
     super(props);
@@ -19,8 +18,8 @@ class ListStudent extends Component {
   componentDidMount() {
     this.setState({
       lop: sessionStorage.getItem("lop").split(", "),
-    });
-    var item = this.state;
+    })
+    var item = this.state.item;
     CallApi(`student/all/${item}`, "GET", null).then((res) => {
       if (res.data.ListStudents != null) {
         this.setState({
