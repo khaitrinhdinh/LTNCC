@@ -1,5 +1,31 @@
 import React, { Component } from "react";
 import CallApi from "../../API/CallApi";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import "../Course.css";
+
+const Title = styled.h2`
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3);
+  font-size: 5rem;
+  font-weight: bolder;
+  margin-top: 5%;
+  color: #1f692f;
+`;
+const Infor_site = styled.div`
+  background-color: white;
+  padding: 2rem;
+  width: 100%;
+  border-radius: 10px;
+  background-color: whitesmoke;
+`;
+const Btn_site = styled.div`
+  position: static;
+  margin-top: 5vh;
+  text-align: center;
+`;
+const Container = styled.div``;
 
 class InfoClassStudent extends Component {
     constructor(props) {
@@ -10,7 +36,7 @@ class InfoClassStudent extends Component {
             error: null
         };
     }
-
+    
     componentDidMount() {
         const { match } = this.props;
         const { mamonhoc, lop } = match.params;
@@ -35,7 +61,7 @@ class InfoClassStudent extends Component {
     }
 
     render() {
-        const { students, loading, error } = this.state;
+        const { students, index,  loading, error } = this.state;
 
         if (loading) {
             return <div>Loading...</div>;
@@ -46,16 +72,17 @@ class InfoClassStudent extends Component {
         }
 
         return (
-            <div>
-                <h2>Danh sách sinh viên</h2>
-                <table>
+            <div className="Container">
+                <Title>Danh sách sinh viên</Title>
+                <Infor_site>
+                <table className="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>STT</th>
+                            <th >STT</th>
                             <th>MSSV</th>
-                            <th>Họ và Tên</th>
-                            <th>Ngày Sinh</th>
-                            <th>Giới Tính</th>
+                            <th >Họ và Tên</th>
+                            <th >Ngày Sinh</th>
+                            <th >Giới Tính</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +97,15 @@ class InfoClassStudent extends Component {
                         ))}
                     </tbody>
                 </table>
+                </Infor_site>
+         <Btn_site>
+          <Link
+            to='/home/manage-courses'
+            className='goback btn btn-danger'
+            style={{ marginRight: "20px" }}>
+            <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
+          </Link>
+        </Btn_site>
             </div>
         );
     }

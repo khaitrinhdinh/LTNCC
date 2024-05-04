@@ -44,7 +44,7 @@ class Course extends Component {
         const { selectedHocki, selectedMonhocs, khoahoc } = this.state;
 
         return (
-            <div className='course-container'>
+            <div className='Container'>
                 <div className='text_center'>
                     <h1 id='qlmh'>Quản lí môn học</h1>
                 </div>

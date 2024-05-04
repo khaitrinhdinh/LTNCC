@@ -1,7 +1,42 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CallApi from "../../API/CallApi";
+import styled from "styled-components";
+import "../../index.css";
 
+
+const Title = styled.h2`
+text-align: center;
+font-family: Verdana, Geneva, Tahoma, sans-serif;
+text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3);
+font-size: 5rem;
+font-weight: bolder;
+margin-top: 5%;
+color: #1f692f;
+`;
+const Title_infor = styled.p`
+  font-size: 2.5rem;
+  width: 50%;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+ 
+`;
+const Btn_site = styled.div`
+  position: static;
+  margin-top: 5vh;
+  text-align: center;
+`;
+const Infor_site = styled.div`
+  background-color: white;
+  padding: 2rem;
+  width: 100%;
+  border-radius: 10px;
+  background-color: whitesmoke;
+`;
+const Container = styled.div``;
 class InfoCourse extends Component {
     constructor(props) {
         super(props);
@@ -47,10 +82,21 @@ class InfoCourse extends Component {
         console.log(studentMSSVs);
 
         return (
-            <div>
-                <h2>Thông tin chi tiết môn học</h2>
+            <Container className="container">
+                <Title>Thông tin chi tiết môn học</Title>
+                <Title_infor>
                 <p>Mã môn học: {mamonhoc}</p>
                 <p>Lớp: {lop}</p>
+                </Title_infor>
+                <Infor_site>
+               
+                <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
+                {/* Phần danh sách sinh viên */}
+                <div>
+                <Link to={`/home/class/student/${mamonhoc}/${lop}`}>
+                    <h3>Danh sách sinh viên</h3>
+                </Link>
+                <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
                 <div>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} onClick={() => this.toggleExpand(0)}>
                         <div style={{ width: "20px", height: "20px", border: "1px solid black", textAlign: "center", marginRight: "10px" }}>{expanded && expandedIndex === 0 ? "-" : ">"}</div>
@@ -70,15 +116,8 @@ class InfoCourse extends Component {
                         </div>
                     )}
                 </div>
-                <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
-                {/* Phần danh sách sinh viên */}
-                <div>
-                <Link to={`/home/class/student/${mamonhoc}/${lop}`}>
-                    <h3>Danh sách sinh viên</h3>
-                </Link>
-
                 </div>
-                <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
+              
                 <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
                 <div>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} onClick={() => this.toggleExpand(1)}>
@@ -91,6 +130,7 @@ class InfoCourse extends Component {
                         </div>
                     )}
                 </div>
+               
                 <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
                 <div>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} onClick={() => this.toggleExpand(2)}>
@@ -115,7 +155,16 @@ class InfoCourse extends Component {
                         </div>
                     )}
                 </div>
-            </div>
+                </Infor_site>
+            <Btn_site>
+          <Link
+            to='/home/manage-courses'
+            className='goback btn btn-danger'
+            style={{ marginRight: "20px" }}>
+            <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
+          </Link>
+        </Btn_site>
+            </Container>
             
         );
     }
