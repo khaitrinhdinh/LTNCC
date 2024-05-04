@@ -53,6 +53,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
 
@@ -68,6 +69,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
 
@@ -83,6 +85,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
   chooseManageCourses = () => {
@@ -112,6 +115,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
   chooseListTeacher = () => {
@@ -126,6 +130,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
   chooseListAdmin = () => {
@@ -140,6 +145,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
   chooseChart = () => {
@@ -154,6 +160,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
 
@@ -169,6 +176,7 @@ class NavBar extends Component {
       chooseProfile: true,
       chooseProfileAdmin: false,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
   chooseProfileAdmin = () => {
@@ -183,6 +191,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: true,
       chooseProfileTeacher: false,
+      chooseManageCourses: false,
     });
   };
    chooseProfileTeacher = () => {
@@ -197,6 +206,7 @@ class NavBar extends Component {
       chooseProfile: false,
       chooseProfileAdmin: false,
       chooseProfileTeacher: true,
+      chooseManageCourses: false,
     });
   };
   chooseLogout = () => {

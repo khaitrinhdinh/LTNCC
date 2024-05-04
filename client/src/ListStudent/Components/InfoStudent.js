@@ -98,6 +98,7 @@ class InfoStudent extends Component {
       birthday: "",
       gender: "",
       phone: "",
+      email:"",
       address: "",
     };
   }
@@ -115,6 +116,7 @@ class InfoStudent extends Component {
           birthday: res.data.studentData.birthday,
           gender: res.data.studentData.gender,
           phone: res.data.studentData.phone,
+          email: res.data.studentData.email,
           address: res.data.studentData.address,
         });
       });
@@ -138,6 +140,7 @@ class InfoStudent extends Component {
       birthday: this.state.birthday,
       gender: this.state.gender,
       phone: this.state.phone,
+      email: this.state.email,
       address: this.state.address,
     }).then((res) => {
       alert("Cập nhật thành công");
@@ -200,6 +203,14 @@ class InfoStudent extends Component {
                   placeholder={student.phone}
                   onChange={this.onChange}
                   style={{ width: "175px" }}
+                />
+                 <p>Email: </p>
+                <input
+                  style={{ width: "90%" }}
+                  type='text'
+                  name='email'
+                  placeholder={student.email}
+                  onChange={this.onChange}
                 />
                 <p style={{ marginTop: "10px" }}>Địa chỉ: </p>
                 <textarea

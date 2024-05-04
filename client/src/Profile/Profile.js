@@ -92,6 +92,7 @@ class InfoStudent extends Component {
       birthday: "",
       gender: "",
       phone: "",
+      email: "",
       address: "",
       sum_of_credits: 0,
       gpa: 0,
@@ -112,6 +113,7 @@ class InfoStudent extends Component {
           birthday: data.birthday,
           gender: data.gender,
           phone: data.phone,
+          email: data.email,
           address: data.address,
           sum_of_credits: data.sum_of_credits,
           gpa: data.gpa,
@@ -139,6 +141,7 @@ class InfoStudent extends Component {
       birthday: this.state.birthday,
       gender: this.state.gender,
       phone: this.state.phone,
+      email: this.state.email,
       address: this.state.address,
     }).then((res) => {
       alert("Cập nhật thành công");
@@ -152,6 +155,7 @@ class InfoStudent extends Component {
       birthday,
       gender,
       phone,
+      email,
       address,
       sum_of_credits,
       gpa,
@@ -205,6 +209,14 @@ class InfoStudent extends Component {
                   type='text'
                   name='phone'
                   placeholder={phone}
+                  onChange={this.onChange}
+                />
+                <p>Email: </p>
+                <input
+                  style={{ width: "90%" }}
+                  type='text'
+                  name='email'
+                  placeholder={email}
                   onChange={this.onChange}
                 />
                 <p style={{ marginTop: "10px" }}>Địa chỉ: </p>
