@@ -2,6 +2,32 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CallApi from "../../API/CallApi";
 import axios from "axios"; // Import axios library
+import "../../index.css";
+import styled from "styled-components";
+
+
+const Btn_site = styled.div`
+  position: static;
+  margin-top: 5vh;
+  text-align: center;
+`;
+const Title = styled.h2`
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3);
+  font-size: 5rem;
+  font-weight: bolder;
+  margin-top: 5%;
+  color: #1f692f;
+`;
+const Infor_site = styled.div`
+  background-color: white;
+  padding: 2rem;
+  width: 50%;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  margin: auto;
+`;
 
 class AddForm5 extends Component {
     constructor(props) {
@@ -92,8 +118,9 @@ class AddForm5 extends Component {
         }
 
         return (
-            <div>
-                <h2>Choose Teacher and Class</h2>
+            <div className='container'>
+                <Title>Choose Teacher and Class</Title>
+                <Infor_site> 
                 <form onSubmit={this.handleSubmit}>
                     <div>
                         <label>Select Teacher:</label>
@@ -119,7 +146,16 @@ class AddForm5 extends Component {
                     </div>
                     <button type="submit">Submit</button>
                 </form>
-                <Link to="/home">Go back</Link>
+                </Infor_site>
+                <Btn_site>
+          <Link
+            to='/home/manage-courses'
+            className='goback btn btn-danger'
+            style={{ marginRight: "20px" }}>
+            <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
+          </Link>
+        </Btn_site>
+                
             </div>
         );
     }

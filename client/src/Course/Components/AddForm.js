@@ -49,7 +49,8 @@ class AddForm4 extends Component {
         const userId = sessionStorage.getItem("userId")
         console.log(userId);
         event.preventDefault();
-        try{
+       
+       try{
             const resultCAPI  = CallApi(`admin/create-Course/${userId}`, "POST",{
                     tenmonhoc: this.state.tenmonhoc,
                     mamonhoc: this.state.mamonhoc,
@@ -63,7 +64,7 @@ class AddForm4 extends Component {
         }catch{
             
         }
-    }
+    };
 
     render() {
         const { tenmonhoc, mamonhoc, lop } = this.state;

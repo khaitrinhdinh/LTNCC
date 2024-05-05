@@ -1,5 +1,32 @@
 import React, { Component } from "react";
 import CallApi from "../../API/CallApi";
+import { Link } from "react-router-dom";
+import "../../index.css";
+import styled from "styled-components";
+
+
+const Btn_site = styled.div`
+  position: static;
+  margin-top: 5vh;
+  text-align: center;
+`;
+const Title = styled.h2`
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3);
+  font-size: 5rem;
+  font-weight: bolder;
+  margin-top: 5%;
+  color: #1f692f;
+`;
+const Infor_site = styled.div`
+  background-color: white;
+  padding: 2rem;
+  width: 50%;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  margin: auto;
+`;
 
 class AddStudentForm extends Component {
     constructor(props) {
@@ -84,8 +111,9 @@ class AddStudentForm extends Component {
         }
 
         return (
-            <div>
-                <h2>Thêm sinh viên</h2>
+            <div className='container' >
+                <Title>Thêm sinh viên</Title>
+                <Infor_site>
                 <form onSubmit={this.handleSubmit}>
                     <div>
                         <label>Name:</label>
@@ -125,6 +153,15 @@ class AddStudentForm extends Component {
                     </div>
                     <button type="submit">Submit</button>
                 </form>
+                </Infor_site>
+                <Btn_site>
+          <Link
+            to='/home/manage-courses'
+            className='goback btn btn-danger'
+            style={{ marginRight: "20px" }}>
+            <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
+          </Link>
+        </Btn_site>
             </div>
         );
     }
