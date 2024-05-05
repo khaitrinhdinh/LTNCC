@@ -5,6 +5,9 @@ import {
   deleteStudentByMSSV, 
   getStudentByMSSV,
   createDocumentWithId,
+  getStudentKeyByMSSV,
+  updateDocument,
+  createCollectionAtPath,
  } from "../scripts/firestore.js";
 
 export const getAllStudent = async (req, res) => {
@@ -21,11 +24,7 @@ export const getAllStudent = async (req, res) => {
 export const updateStudent = async (req, res) => {
   try {
     console.log(req.body);
-    const { name, birthday, gender, phone, address } = req.body;
-    const updatedStudent = await Student.findByIdAndUpdate(
-      { _id: req.params.id },
-      { name, birthday, gender, phone, address }
-    );
+    const updatedStudent = await updateDocument(`Students`, req.params.id, req.body);
     if (updatedStudent) {
       res.json({ message: "Update successfully" });
     } else {
@@ -40,6 +39,8 @@ export const createStudent = async (req, res) => {
   try {
     const { id, ...dataWithoutId } = req.body;
     const createSt = await createDocumentWithId(`Students`, id, dataWithoutId);
+    await createCollectionAtPath(`Students/${id}`, "MONHOC")
+    await createDocumentWithId(`Students/${id}/MONHOC`, "221", {MONHOC:[]})
     res.json({message: "Create student successfully!"});
   } catch (error) {
     res.status(500).json({ message: "Server error ~ createStudent" });
@@ -121,7 +122,7 @@ export const getCourse = async(req, res)=>{
   }
 }
 export const getClass = async (req, res) => {
-  console.log("okok");
+  console.log(req.params.mmh);
   try{
     const {data, error} = await readDocument(`Courses/${req.params.mmh}/DANHSACHLOP`,req.params.lop)
     if(error){
@@ -131,5 +132,34 @@ export const getClass = async (req, res) => {
     }
   }catch{
 
+  }
+}
+
+export const createCourseST = async (req,res) => {
+  try{
+    const getresult = await getStudentKeyByMSSV(req.params.id);
+    const readMonhocStudent = await readCollection(`Students/${getresult}/MONHOC`);
+    let maxId = 0;
+    let maxIndex = -1;
+    readMonhocStudent.forEach((doc, index) => {
+      const id = parseInt(doc.id);
+      if (id > maxId) {
+        maxId = id;
+        maxIndex = index;
+      }
+    });
+    if (maxIndex === -1 || !readMonhocStudent[maxIndex].MONHOC) {
+      throw new Error("No valid document found to update");
+    }
+
+    readMonhocStudent[maxIndex].MONHOC.push(req.body);
+
+    const { id, ...monHocWithoutId } = readMonhocStudent[maxIndex];
+    const updateMonhocStudent = await updateDocument(`Students/${getresult}/MONHOC`, id, monHocWithoutId);
+    res.status(200).json({ success: true, message: "Course created successfully" });
+  } catch (error) {
+
+    console.error("Error creating course:", error);
+    res.status(500).json({ success: false, message: "Failed to create course", error: error.message });
   }
 }

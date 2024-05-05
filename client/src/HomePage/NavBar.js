@@ -390,6 +390,20 @@ class NavBar extends Component {
                 </Link>
                 <span className='tooltip'>Thông Báo</span>
               </li>
+                <li
+                  className={chooseManageCourses ? "home" : ""}
+                  onClick={this.chooseManageCourses}
+                >
+                <Link to="/home/manage-courses">
+                  <ul>
+                    <div className="icon">
+                      <span className="fa fa-book"></span>{" "}
+                    </div>
+                    <span className="links_name">Quản lí môn học</span>
+                  </ul>
+                </Link>
+                <span className="tooltip">Quản lí môn học</span>
+              </li>
               <li
                 id='liststu'
                 className={
@@ -498,6 +512,20 @@ class NavBar extends Component {
                   </ul>
                 </Link>
                 <span className='tooltip'>Thông Báo</span>
+              </li>
+                <li
+                  className={chooseManageCourses ? "home" : ""}
+                  onClick={this.chooseManageCourses}
+                >
+                <Link to="/home/manage-courses">
+                  <ul>
+                    <div className="icon">
+                      <span className="fa fa-book"></span>{" "}
+                    </div>
+                    <span className="links_name">Quản lí môn học</span>
+                  </ul>
+                </Link>
+                <span className="tooltip">Quản lí môn học</span>
               </li>
               <li
                 id='liststu'

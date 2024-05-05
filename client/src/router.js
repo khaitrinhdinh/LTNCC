@@ -19,6 +19,10 @@ import ListAdmin from "./ListAdmin/ListAdmin";
 import Course from "./Course/course";
 import InfoClassStudent from "./Course/Components/listClass";
 import InfoCourse from "./Course/Components/InfoCourse";
+import InfoScore from "./Course/Components/changeScore";
+import AddForm4 from "./Course/Components/AddForm";
+import AddForm5 from "./Course/Components/AddFormTC";
+import AddForm6 from "./Course/Components/AddFormST";
 const routes = [
   {
     path: "/home/notification",
@@ -66,6 +70,21 @@ const routes = [
     main: () => <AddForm3 />,
   },
   {
+    path:"/home/courses-addcourse/add",
+    exact: true,
+    main: () => <AddForm4/>,
+  },
+  {
+    path: "/home/courses-addteacher/add/:mamonhoc",
+    exact: true,
+    main: ({match}) =><AddForm5 match = {match}/>
+  },
+  {
+    path: "/home/courses-addstudent/add/:mamonhoc",
+    exact: true,
+    main: ({match}) =><AddForm6 match = {match}/>
+  },
+  {
     path: "/home/list-students/update/:mssv",
     exact: true,
     main: ({ match }) => <InfoStudent match={match} />,
@@ -101,7 +120,7 @@ const routes = [
     main: () => <Course/>,
   },
   {
-    path: "/monhoc/:mamonhoc",
+    path: "/home/monhoc/:mamonhoc",
     exact: true,
     main: ({ match, lop }) => <InfoCourse match={match} lop={lop} />,
   },
@@ -109,6 +128,12 @@ const routes = [
     path: "/home/class/student/:mamonhoc/:lop",
     exact: true,
     main: ({match}) => <InfoClassStudent match = {match}/>,
+  },
+  {
+    path:"/home/course/detail/:mamonhoc/:lop/:mssv",
+    exact: true,
+    main: ({match}) => <InfoScore match = {match}/>
+
   },
   {
     path: "/home",

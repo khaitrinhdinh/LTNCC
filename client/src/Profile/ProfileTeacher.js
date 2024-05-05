@@ -74,6 +74,7 @@ class InfoTeacher extends Component {
       address: "",
       lop: "",
       khoa: "",
+      department:"",
     };
   }
 
@@ -93,6 +94,7 @@ class InfoTeacher extends Component {
           address: data.address,
           lop: data.management,
           khoa: data.khoa,
+          department: data.department,
         });
       });
     }
@@ -120,6 +122,7 @@ class InfoTeacher extends Component {
       phone: this.state.phone,
       email: this.state.email,
       address: this.state.address,
+      department: this.state.department,
     }).then((res) => {
       alert("Cập nhật thành công");
       window.location.reload();
@@ -137,6 +140,7 @@ class InfoTeacher extends Component {
       address,
       lop,
       khoa,
+      department,
     } = this.state;
     return (
       <div className='container'>

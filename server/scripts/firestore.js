@@ -73,7 +73,6 @@ export async function updateDocument(path, id, data) {
   let payload = { message: null, error: null, loading: true };
   try {
     const documentPath = doc(fireStore, path, id);
-    console.log(documentPath);
     await setDoc(documentPath, data);
     payload = { message: "updated successfully", error: null, loading: false };
   } catch (error) {
@@ -132,7 +131,6 @@ export async function deleteStudentByMSSV(mssv) {
 }
 
 // TODO: get Student with mssv
-
 export async function getStudentByMSSV(mssv) {
   try {
     const studentsRef = collection(fireStore, "Students");
@@ -162,4 +160,52 @@ export async function createCollectionAtPath(path, collectionName) {
   }
 }
 
+//TO DO: get key document
+export async function getDocumentKeyByMSSV(mssv) {
+  try {
+    const studentsRef = collection(fireStore, 'Students');
+    const q = query(studentsRef, where('mssv', '==', mssv));
+    const querySnapshot = await getDocs(q);
+    let documentKey = null;
+    querySnapshot.forEach(doc => {
+      documentKey = doc.id;
+    });
+    return documentKey;
+  } catch (error) {
+    console.error('Error getting document key:', error);
+    return null;
+  }
+}
 
+//TO DO: get all teacher from department
+export async function getListTeachersByDepartment(department) {
+  try {
+    const teachersRef = collection(fireStore, 'Teachers');
+    const q = query(teachersRef, where('department', '==', department));
+    const querySnapshot = await getDocs(q);
+    const teachers = [];
+    querySnapshot.forEach((doc) => {
+      teachers.push({ id: doc.id, ...doc.data() });
+    });
+    return teachers;
+  } catch (error) {
+    console.log('Error getting teachers:', error);
+    return [];
+  }
+}
+
+export async function getStudentKeyByMSSV(mssv) {
+  try {
+    const studentsRef = collection(fireStore, "Students");
+    const q = query(studentsRef, where("mssv", "==", mssv));
+    const querySnapshot = await getDocs(q);
+    let studentKey = null;
+    querySnapshot.forEach((doc) => {
+      studentKey = doc.id;
+    });
+    return studentKey;
+  } catch (error) {
+    console.error("Error fetching student key:", error);
+    return null;
+  }
+}

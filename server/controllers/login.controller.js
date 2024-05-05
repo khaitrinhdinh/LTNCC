@@ -38,16 +38,17 @@ export const login = async (req, res) => {
             lop : studentDoc.data.lop,
             email: studentDoc.data.email,
             mssv: studentDoc.data.mssv,
+            khoa: studentDoc.data.department,
           });
         }else if(userRole === "admin") {
-          const adminDoc = await readCollection(`Admins/${loginResult.data}/manage`)
-          const listlop = adminDoc.map(item => item.id).join(', ');
+          const adminDoc = await readDocument(`Admins`, loginResult.data);
           res.json({
               success: true,
               massage: "Admin logged in successfully",
               userId: loginResult.data,
-              lop: listlop,
+              lop: adminDoc.data.lop,
               role : userRole,
+              khoa: adminDoc.data.department,
           });
         }else{
           const teacherDoc = await readDocument('Teachers', loginResult.data)
@@ -57,6 +58,7 @@ export const login = async (req, res) => {
             userId: loginResult.data,
             lop: teacherDoc.data.management,
             role : userRole,
+            khoa: teacherDoc.data.department,
           });
         }
       }

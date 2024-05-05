@@ -16,8 +16,44 @@ class AddForm2 extends Component {
       address: "",
       lop: "",
       khoa: "",
+      department: "",
     };
   }
+
+  componentDidMount() {
+    const department = sessionStorage.getItem("khoa");
+    const lop = sessionStorage.getItem("lop");
+    if (department) {
+      this.setState({ department: department});
+
+      this.setState({ khoa: this.convertKhoaToDepartment(department) });
+    }
+    
+    if (lop) {
+      this.setState({ lop });
+    }
+  }
+
+  convertKhoaToDepartment = (department) => {
+    switch (department) {
+      case "CK":
+        return "KHOA CƠ KHÍ";
+      case "KTDCVDK":
+        return "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ";
+      case "DDD":
+        return "KHOA ĐIỆN - ĐIỆN TỬ";
+      case "KTGT":
+        return "KHOA KỸ THUẬT GIAO THÔNG";
+      case "KTHH":
+        return "KHOA KỸ THUẬT HÓA HỌC";
+      case "MTVTN":
+        return "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN";
+      case "KHVKTMT":
+        return "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH";
+      default:
+        return "";
+    }
+  };
 
   onChange = (event) => {
     var target = event.target;
@@ -35,11 +71,10 @@ class AddForm2 extends Component {
       password: this.state.ID,
       lop: this.state.lop,
     }).then((res) => {
-      if(res.data.id != null){
+      if (res.data.id != null) {
         this.setState({
           id: res.data.id,
         }, () => {
-          console.log(this.state.id);
           CallApi("teacher/create", "POST", {
             ID: this.state.ID,
             id: this.state.id,
@@ -51,7 +86,8 @@ class AddForm2 extends Component {
             address: this.state.address,
             management: this.state.lop,
             khoa: this.state.khoa,
-          }).then(()=>{
+            department: this.state.department,
+          }).then(() => {
             this.setState({
               ID: "",
               id: "",
@@ -62,7 +98,8 @@ class AddForm2 extends Component {
               email: "",
               address: "",
               lop: "",
-              khoa: "", // Reset trường "khoa"
+              khoa: "",
+              department: "",
             });
           });
         });
@@ -72,15 +109,7 @@ class AddForm2 extends Component {
   };
 
   render() {
-    const khoaOptions = [
-      "KHOA CƠ KHÍ",
-      "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ",
-      "KHOA ĐIỆN - ĐIỆN TỬ",
-      "KHOA KỸ THUẬT GIAO THÔNG",
-      "KHOA KỸ THUẬT HÓA HỌC",
-      "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN",
-      "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH",
-    ];
+    const lopOptions = sessionStorage.getItem("lop") ? sessionStorage.getItem("lop").split(",") : [];
 
     return (
       <div className="addForm">
@@ -162,28 +191,19 @@ class AddForm2 extends Component {
                     onChange={this.onChange}
                   />
                   <label>Lớp:</label>
-                  <input
-                    placeholder="vd: K64-CA-CLC-4"
-                    type="text"
+                  <select
                     className="form-control"
                     required
                     name="lop"
                     value={this.state.lop}
                     onChange={this.onChange}
-                  />
-                  <label>Khoa:</label>
-                  <select
-                    className="form-control"
-                    required
-                    name="khoa"
-                    value={this.state.khoa}
-                    onChange={this.onChange}
                   >
-                    <option value="">-- Chọn khoa --</option>
-                    {khoaOptions.map((khoa, index) => (
-                      <option key={index} value={khoa}>{khoa}</option>
+                    <option value="">-- Chọn lớp --</option>
+                    {lopOptions.map((lop, index) => (
+                      <option key={index} value={lop}>{lop}</option>
                     ))}
                   </select>
+
                   <br />
                   <div className="text_center">
                     <button

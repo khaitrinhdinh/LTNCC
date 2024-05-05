@@ -87,7 +87,7 @@ class InfoStudent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      msv: "",
+      mssv: "",
       name: "",
       birthday: "",
       gender: "",
@@ -98,6 +98,8 @@ class InfoStudent extends Component {
       gpa: 0,
       status: "",
       lop: "",
+      khoa:"",
+      department:"",
     };
   }
 
@@ -108,7 +110,7 @@ class InfoStudent extends Component {
       CallApi(`student/${id}`, "GET", null).then((res) => {
         var data = res.data.studentData;
         this.setState({
-          msv: data.mssv,
+          mssv: data.mssv,
           name: data.name,
           birthday: data.birthday,
           gender: data.gender,
@@ -119,6 +121,8 @@ class InfoStudent extends Component {
           gpa: data.gpa,
           status: data.status,
           lop: data.lop,
+          khoa: data.khoa,
+          department: data.department,
         });
       });
     }
@@ -137,20 +141,28 @@ class InfoStudent extends Component {
     event.preventDefault();
     var id = sessionStorage.getItem("userId");
     CallApi(`student/update/${id}`, "PATCH", {
-      name: this.state.name,
-      birthday: this.state.birthday,
-      gender: this.state.gender,
-      phone: this.state.phone,
-      email: this.state.email,
-      address: this.state.address,
+          mssv: this.state.mssv,
+          name: this.state.name,
+          birthday: this.state.birthday,
+          gender: this.state.gender,
+          phone: this.state.phone,
+          email: this.state.email,
+          address: this.state.address,
+          sum_of_credits: this.state.sum_of_credits,
+          gpa: this.state.gpa,
+          status: this.state.status,
+          lop: this.state.lop,
+          khoa: this.state.khoa,
+          department: this.state.department,
     }).then((res) => {
       alert("Cập nhật thành công");
+      window.location.reload();
     });
   };
 
   render() {
     var {
-      msv,
+      mssv,
       name,
       birthday,
       gender,
@@ -161,6 +173,8 @@ class InfoStudent extends Component {
       gpa,
       status,
       lop,
+      khoa,
+      department,
     } = this.state;
     return (
       <div className='container'>
@@ -179,7 +193,7 @@ class InfoStudent extends Component {
               </Image_div>
               <Left_div>
                 <p>Mã số sinh viên: </p>
-                <label>{msv}</label>
+                <label>{mssv}</label>
                 <p>Giới tính:</p>
                 <label>{gender}</label>
                 <p style={{ marginTop: "10px" }}>Họ và tên: </p>

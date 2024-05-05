@@ -79,7 +79,7 @@ class InfoCourse extends Component {
         const mamonhoc = match.params.mamonhoc;
         const lop = sessionStorage.getItem("selectedLop");
         const { expanded, expandedIndex, scores ,studentMSSVs} = this.state;
-        console.log(studentMSSVs);
+        const role = sessionStorage.getItem("role");
 
         return (
             <Container className="container">
@@ -97,6 +97,7 @@ class InfoCourse extends Component {
                     <h3>Danh sách sinh viên</h3>
                 </Link>
                 <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />
+                {role === "student" && (
                 <div>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} onClick={() => this.toggleExpand(0)}>
                         <div style={{ width: "20px", height: "20px", border: "1px solid black", textAlign: "center", marginRight: "10px" }}>{expanded && expandedIndex === 0 ? "-" : ">"}</div>
@@ -104,11 +105,9 @@ class InfoCourse extends Component {
                     </div>
                     {expanded && expandedIndex === 0 && (
                         <div style={{ width: "400px", height: "auto", backgroundColor: "lightgray", padding: "10px", border: "1px solid black" }}>
-                            {/* Kiểm tra nếu scores không tồn tại hoặc không có dữ liệu */}
                             {!scores || Object.keys(scores).length === 0 ? (
                                 <p>Không có điểm số.</p>
                             ) : (
-                                /* Hiển thị danh sách điểm số từ state */
                                 Object.entries(scores).map(([subject, score]) => (
                                     <p key={subject} style={{ marginBottom: "5px" }}>{subject}: {score}</p>
                                 ))
@@ -116,6 +115,7 @@ class InfoCourse extends Component {
                         </div>
                     )}
                 </div>
+                )}
                 </div>
               
                 <hr style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }} />

@@ -16,6 +16,8 @@ class AddForm3 extends Component {
       email: "",
       address: "",
       khoa: "",
+      lop: "",
+      department: "", 
     };
   }
 
@@ -26,6 +28,36 @@ class AddForm3 extends Component {
     this.setState({
       [name]: value,
     });
+
+    // Cập nhật trường department tương ứng với tên khoa
+    if (name === "khoa") {
+      switch (value) {
+        case "KHOA CƠ KHÍ":
+          this.setState({ department: "CK" });
+          break;
+        case "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ":
+          this.setState({ department: "KTDCVDK" });
+          break;
+        case "KHOA ĐIỆN - ĐIỆN TỬ":
+          this.setState({ department: "DDD" });
+          break;
+        case "KHOA KỸ THUẬT GIAO THÔNG":
+          this.setState({ department: "KTGT" });
+          break;
+        case "KHOA KỸ THUẬT HÓA HỌC":
+          this.setState({ department: "KTHH" });
+          break;
+        case "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN":
+          this.setState({ department: "MTVTN" });
+          break;
+        case "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH":
+          this.setState({ department: "KHVKTMTC" });
+          break;
+        default:
+          this.setState({ department: "" });
+          break;
+      }
+    }
   };
 
   onSubmit = (event) => {
@@ -49,6 +81,8 @@ class AddForm3 extends Component {
             email: this.state.email,
             address: this.state.address,
             khoa: this.state.khoa,
+            department: this.state.department,
+            lop: this.state.lop,
           }). then(()=>{
             this.setState({
               ID: "",
@@ -60,6 +94,7 @@ class AddForm3 extends Component {
               email: "",
               address: "",
               khoa: "",
+              lop: "", // Reset lớp sau khi thêm
             });
           });
         })
@@ -171,12 +206,19 @@ class AddForm3 extends Component {
                       <option key={index} value={khoa}>{khoa}</option>
                     ))}
                   </select>
+                  <label>Lớp:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="lop"
+                    value={this.state.lop}
+                    onChange={this.onChange}
+                  />
                   <br />
                   <div className="text_center">
                     <button
                       type="submit"
                       className="button submit btn btn-primary custom"
-                      onClick={this.onSubmit}
                     >
                       <span className="fa fa-plus"></span> &nbsp;Lưu lại
                     </button>{" "}

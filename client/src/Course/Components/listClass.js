@@ -40,28 +40,82 @@ class InfoClassStudent extends Component {
     componentDidMount() {
         const { match } = this.props;
         const { mamonhoc, lop } = match.params;
-
-        CallApi(`student/class/${mamonhoc}/${lop}`, "GET", null)
-            .then((res) => {
-                const studentMSSVs = Object.keys(res.data.class.SINHVIEN);
-                return Promise.all(
-                    studentMSSVs.map((studentMSSV) =>
+        const lops = sessionStorage.getItem("selectedLop").split(",");
+        console.log(lops);
+        if (sessionStorage.getItem("role") === "admin") {
+            Promise.all(
+                lops.map(lop =>
+                    CallApi(`student/class/${mamonhoc}/${lop}`, "GET", null)
+                )
+            )
+            .then(responses => {
+                const allStudents = [];
+                responses.forEach(response => {
+                    const studentMSSVs = Object.keys(response.data.class.SINHVIEN);
+                    const studentPromises = studentMSSVs.map(studentMSSV =>
                         CallApi(`student/mssv/${studentMSSV}`, "GET", null)
-                    )
-                );
+                    );
+                    Promise.all(studentPromises)
+                    .then(studentResponses => {
+                        const students = studentResponses.map(
+                            studentResponse => studentResponse.data.studentData
+                        );
+                        allStudents.push(...students);
+                        this.setState({ students: allStudents, loading: false });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching student data:", error);
+                        this.setState({ error: error, loading: false });
+                    });
+                });
             })
-            .then((responses) => {
-                const students = responses.map((response) => response.data.studentData);
-                this.setState({ students: students, loading: false });
-            })
-            .catch((error) => {
+            .catch(error => {
                 console.error("Error fetching data:", error);
                 this.setState({ error: error, loading: false });
+            });
+        } else {
+            CallApi(`student/class/${mamonhoc}/${lop}`, "GET", null)
+                .then(res => {
+                    const studentMSSVs = Object.keys(res.data.class.SINHVIEN);
+                    return Promise.all(
+                        studentMSSVs.map(studentMSSV =>
+                            CallApi(`student/mssv/${studentMSSV}`, "GET", null)
+                        )
+                    );
+                })
+                .then(responses => {
+                    const students = responses.map(
+                        response => response.data.studentData
+                    );
+                    this.setState({ students: students, loading: false });
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    this.setState({ error: error, loading: false });
+                });
+        }        
+    }
+
+    handleDeleteStudent = (mssv, lop) => {
+        console.log(lop);
+        const { match } = this.props;
+        const { mamonhoc} = match.params;
+
+        
+        CallApi(`admin/delete_student_course/${mamonhoc}/${lop}/${mssv}`, "DELETE", null)
+            .then(() => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error("Error deleting student:", error);
             });
     }
 
     render() {
-        const { students, index,  loading, error } = this.state;
+        const { students, loading, error } = this.state;
+        const role = sessionStorage.getItem("role");
+        const { match } = this.props;
+        const { mamonhoc, lop } = match.params;
 
         if (loading) {
             return <div>Loading...</div>;
@@ -75,37 +129,62 @@ class InfoClassStudent extends Component {
             <div className="Container">
                 <Title>Danh sách sinh viên</Title>
                 <Infor_site>
-                <table className="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th >STT</th>
-                            <th>MSSV</th>
-                            <th >Họ và Tên</th>
-                            <th >Ngày Sinh</th>
-                            <th >Giới Tính</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student, index) => (
-                            <tr key={student.mssv}>
-                                <td>{index + 1}</td>
-                                <td>{student.mssv}</td>
-                                <td>{student.name}</td>
-                                <td>{student.birthday}</td>
-                                <td>{student.gender}</td>
+                    <table className="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>MSSV</th>
+                                <th>Họ và Tên</th>
+                                <th>Ngày Sinh</th>
+                                <th>Giới Tính</th>
+                                {role === "teacher" && <th>Chi tiết</th>}
+                                {role === "teacher" && <th>Xóa</th>} {/* Add Delete column */}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {students.map((student, index) => (
+                                <tr key={student.mssv}>
+                                    <td>{index + 1}</td>
+                                    <td>{student.mssv}</td>
+                                    <td>{student.name}</td>
+                                    <td>{student.birthday}</td>
+                                    <td>{student.gender}</td>
+                                    {role === "teacher" && (
+                                        <td>
+                                            <Link to={`/home/course/detail/${mamonhoc}/${lop}/${student.mssv}`}>
+                                                Chi tiết
+                                            </Link>
+                                        </td>
+                                    )}
+                                    {role === "admin" && (
+                                        <td>
+                                            <button onClick={() => this.handleDeleteStudent(student.mssv, student.lop)}>
+                                                Xóa
+                                            </button>
+                                        </td>
+                                    )}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </Infor_site>
-         <Btn_site>
-          <Link
-            to='/home/manage-courses'
-            className='goback btn btn-danger'
-            style={{ marginRight: "20px" }}>
-            <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
-          </Link>
-        </Btn_site>
+                <Btn_site>{role === "admin" && (
+                        <React.Fragment>
+                            <Link to={`/home/courses-addteacher/add/${mamonhoc}`} className='btn btn-primary'>
+                                Thêm giáo viên
+                            </Link>
+                            <Link to={`/home/courses-addstudent/add/${mamonhoc}`} className='btn btn-success' style={{ marginLeft: "20px" }}>
+                                Thêm sinh viên
+                            </Link>
+                        </React.Fragment>
+                    )}
+                    <Link
+                        to='/home/manage-courses'
+                        className='goback btn btn-danger'
+                        style={{ marginRight: "20px" }}>
+                        <span className='fa fa-arrow-left'></span> &nbsp; Quay lại
+                    </Link>
+                </Btn_site>
             </div>
         );
     }

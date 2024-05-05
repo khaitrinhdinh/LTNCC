@@ -10,39 +10,66 @@ class AddForm extends Component {
       name: "",
       birthday: "",
       gender: "",
-      gmail:" ",
+      email:" ",
       phone: "",
       address: "",
       sum_of_credits: 0,
       gpa: 0,
       status: "",
       khoa: "",
-      nganh: "",
       lop: "",
+      department: "",
     };
   }
+    componentDidMount() {
+      const department = sessionStorage.getItem("khoa");
+      const lop = sessionStorage.getItem("lop");
+      if (department) {
+        this.setState({ department: department });
 
-  onChange = (event) => {
-    var target = event.target;
-    var name = target.name;
-    var value = target.value;
-    this.setState({
-      [name]: value,
-    });
-  };
+        this.setState({ khoa: this.convertKhoaToDepartment(department) });
+      }
+      
+      if (lop) {
+        this.setState({ lop });
+      }
+    }
 
-  onChangeKhoa = (event) => {
-    const value = event.target.value;
-    this.setState({
-      khoa: value,
-      nganh: "",
-    });
-  };
+    convertKhoaToDepartment = (department) => {
+      switch (department) {
+        case "CK":
+          return "KHOA CƠ KHÍ";
+        case "KTDCVDK":
+          return "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ";
+        case "DDD":
+          return "KHOA ĐIỆN - ĐIỆN TỬ";
+        case "KTGT":
+          return "KHOA KỸ THUẬT GIAO THÔNG";
+        case "KTHH":
+          return "KHOA KỸ THUẬT HÓA HỌC";
+        case "MTVTN":
+          return "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN";
+        case "KHVKTMT":
+          return "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH";
+        default:
+          return "";
+      }
+    };
+
+
+    onChange = (event) => {
+      var target = event.target;
+      var name = target.name;
+      var value = target.value;
+      this.setState({
+        [name]: value,
+      });
+    };
 
   onSubmit = (event) => {
     event.preventDefault();
     CallApi("create-student-account", "POST", {
-        username: this.state.gmail,
+        username: this.state.email,
         password: this.state.mssv,
         lop: this.state.lop,
     }).then((res) => {
@@ -57,14 +84,14 @@ class AddForm extends Component {
             birthday: this.state.birthday,
             gender: this.state.gender,
             phone: this.state.phone,
-            gmail: this.state.gmail,
+            email: this.state.email,
             address: this.state.address,
             sum_of_credits: this.state.sum_of_credits,
             gpa: this.state.gpa,
             status: this.state.status,
             khoa: this.state.khoa,
-            nganh: this.state.nganh,
             lop: this.state.lop,
+            department: this.state.department,
           }).then(()=>{
             this.setState({
               mssv: "",
@@ -89,36 +116,7 @@ class AddForm extends Component {
   };
 
   render() {
-    const khoaNganhList = [
-      {
-        khoa: "KHOA CƠ KHÍ",
-        nganh: ["Kỹ thuật Cơ khí", "Công nghệ May", "Kỹ thuật Cơ điện tử", "Kỹ thuật Dệt", "Kỹ thuật Hệ thống Công nghiệp", "Logistics và Quản lý Chuỗi cung ứng", "Kỹ thuật Nhiệt"],
-      },
-      {
-        khoa: "KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ",
-        nganh: ["Kỹ thuật Địa chất", "Kỹ thuật Dầu khí", ],
-      },
-      {
-        khoa: "ĐIỆN-ĐIỆN TỬ",
-        nganh: ["Kỹ thuật Điều khiển và Tự động hóa", "Kỹ thuật Điện tử - Truyền thông", "Kỹ thuật Điện - Điện tử", "Song ngành: Kỹ thuật Điện tử - Viễn thông - Kỹ thuật Điện", "Song ngành: Kỹ thuật Điện tử - Viễn thông - Kỹ thuật Điều khiển và Tự động hóa", "Song ngành: Kỹ thuật Điện - Kỹ thuật Điện tử - Viễn thông", "Song ngành: Kỹ thuật Điện - Kỹ thuật Điều khiển và Tự động hóa", "Song ngành: Kỹ thuật Điều khiển và Tự động hóa - Kỹ thuật Điện tử - Viễn thông", "Song ngành: Kỹ thuật Điều khiển và Tự động hóa - Kỹ thuật Điện"]
-      },
-      {
-        khoa: "KHOA KỸ THUẬT GIAO THÔNG",
-        nganh: ["Kỹ thuật Hàng không", "Kỹ thuật Ô tô", "Kỹ thuật Tàu thủy", "Song ngành: Kỹ thuật Tàu thủy - Hàng không"]
-      },
-      {
-        khoa: "KHOA KỸ THUẬT HÓA HỌC",
-        nganh: ["Công nghệ Sinh học", "Kỹ thuật Hóa học", "Công nghệ Thực phẩm"]
-      },
-      {
-        khoa: "KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN",
-        nganh: ["	Kỹ thuật Môi trường", "Quản lý Tài nguyên và Môi trường"]
-      },
-      {
-        khoa: "KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH",
-        nganh: ["Khoa học Máy tính", "Kỹ thuật máy tính", "Công nghệ Thông tin (Vừa Làm Vừa Học)"]
-      }
-    ];
+    const lopOptions = sessionStorage.getItem("lop") ? sessionStorage.getItem("lop").split(", ") : [];
     return (
       <div className="addForm">
         <div className="back">
@@ -173,13 +171,13 @@ class AddForm extends Component {
                     <option value="Nam">Nam</option>
                     <option value="Nữ">Nữ</option>
                   </select>
-                  <label>Gmail:</label>
+                  <label>email:</label>
                   <input
                     type="email"
                     className="form-control"
                     required
-                    name="gmail"
-                    value={this.state.gmail}
+                    name="email"
+                    value={this.state.email}
                     onChange={this.onChange}
                   />
                   <label>Số điện thoại:</label>
@@ -233,48 +231,19 @@ class AddForm extends Component {
                     <option value="Thiếu học phí">Thiếu học phí</option>
                     <option value="Khen thưởng">Khen thưởng</option>
                   </select>{" "}
-                  <div className="form-group">
-                    <label>Khoa: </label>
-                    <select
-                      className="form-control"
-                      name="khoa"
-                      value={this.state.khoa}
-                      onChange={this.onChangeKhoa}
-                    >
-                      <option value="">-- Chọn khoa --</option>
-                      {khoaNganhList.map((item, index) => (
-                        <option key={index} value={item.khoa}>{item.khoa}</option>
-                      ))}
-                    </select>
-                  </div>
-                  {this.state.khoa && (
-                    <div className="form-group">
-                      <label>Ngành: </label>
-                      <select
-                        className="form-control"
-                        name="nganh"
-                        value={this.state.nganh}
-                        onChange={this.onChange}
-                      >
-                        <option value="">-- Chọn ngành --</option>
-                        {khoaNganhList
-                          .find((item) => item.khoa === this.state.khoa)
-                          .nganh.map((nganh, index) => (
-                            <option key={index} value={nganh}>{nganh}</option>
-                          ))}
-                      </select>
-                    </div>
-                  )}
                   <label>Lớp:</label>
-                  <input
-                    placeholder="vd: K64-CA-CLC-4"
-                    type="text"
+                  <select
                     className="form-control"
                     required
                     name="lop"
                     value={this.state.lop}
                     onChange={this.onChange}
-                  />
+                  >
+                    <option value="">-- Chọn lớp --</option>
+                    {lopOptions.map((lop, index) => (
+                      <option key={index} value={lop}>{lop}</option>
+                    ))}
+                  </select>
                   <br />
                   <div className="text_center">
                     <button

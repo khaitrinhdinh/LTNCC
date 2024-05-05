@@ -73,6 +73,8 @@
         email: "",
         address: "",
         lop: "",
+        khoa:"",
+        department:"",
       };
     }
 
@@ -90,7 +92,9 @@
             phone: data.phone,
             email: data.email,
             address: data.address,
-            khoa: data.khoa,
+            lop: data.lop,
+            khoa:data.khoa,
+            department:data.department,
           });
         });
       }
@@ -109,14 +113,16 @@
       event.preventDefault();
       var id = sessionStorage.getItem("userId");
       CallApi(`admin/update/${id}`, "PATCH", {
-        ID: this.state.ID,
-        khoa: this.state.khoa,
-        name: this.state.name,
-        birthday: this.state.birthday,
-        gender: this.state.gender,
-        phone: this.state.phone,
-        email: this.state.email,
-        address: this.state.address,
+            ID: this.state.ID,
+            name: this.state.name,
+            birthday: this.state.birthday,
+            gender: this.state.gender,
+            phone: this.state.phone,
+            email: this.state.email,
+            address: this.state.address,
+            lop: this.state.lop,
+            khoa:this.state.khoa,
+            department:this.state.department,
       }).then((res) => {
         alert("Cập nhật thành công");
         window.location.reload();
@@ -132,7 +138,9 @@
         phone,
         email,
         address,
+        lop,
         khoa,
+        department,
       } = this.state;
       return (
         <div className='container'>
