@@ -1,40 +1,39 @@
+import { 
+  createDocumentWithId, 
+  deleteDocument,
+  updateDocument,
+  getListPost,
+  updateDocumentNoti,
+} from "../scripts/firestore.js";
+
 export const getPost = async (req, res) => {
   try {
-    const getpost = await Posts.find({ lop: req.params.item }).select("-lop");
-    if (getpost) {
-      res.json({ getpost });
-    } else {
-      res.json({ message: "getpost error" });
-    }
+    const ListPosts = await getListPost(req.params.item);
+
+    res.json({ success: true, ListPosts });
   } catch (error) {
-    res.status(500).json({ message: "Server error ~ getPost" });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error ~ getAllPost" });
   }
 };
 
 export const createPost = async (req, res) => {
   try {
-    const { id, content, lop } = req.body;
-
-    const newPost = new Posts({
-      id,
-      content,
-      lop,
-    });
-    await newPost.save();
-
-    res.json({ message: "Create post successfully" });
+    console.log("ôk")
+    const { id, ...dataWithoutId } = req.body;
+    const createSt = await createDocumentWithId(`Posts`, id, dataWithoutId);
+    res.json({message: "Create post successfully!", createSt});
   } catch (error) {
-    res.status(500).json({ message: "Server error ~ createPost" });
+    res.status(500).json({ message: "Server error ~ createpost" });
   }
+ 
 };
 
 export const updatePost = async (req, res) => {
   try {
     const { content } = req.body;
-    const updatedPost = await Posts.findOneAndUpdate(
-      { id: req.params.id },
-      { content }
-    );
+    const updatedPost = await updateDocument(`Posts`, req.params.id, req.body);
     if (updatedPost) {
       res.json({ message: "Update successfully" });
     } else {
@@ -47,7 +46,7 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    const deletedPost = await Posts.findOneAndDelete({ id: req.params.id });
+    const deletedPost = await deleteDocument('Posts', req.params.id);
     if (deletedPost) {
       res.json({ message: "Delete successfully" });
     } else {
@@ -60,22 +59,13 @@ export const deletePost = async (req, res) => {
 
 export const commentPost = async (req, res) => {
   try {
-    const { msv, cmt } = req.body;
-    const comment = await Posts.findOneAndUpdate(
-      { id: req.params.id },
-      {
-        $push: {
-          comment: {
-            msv: msv,
-            cmt: cmt,
-          },
-        },
-      },
-      { new: true, upsert: true }
-    );
-
+   const { 
+      mssv,
+      cmt
+    } = req.body;
+    const comment = await updateDocumentNoti(`Posts`, req.params.id, {mssv, cmt});
     if (comment) {
-      res.json({ message: "Comment successfully" });
+      res.json({ message: "Comment successfully" , comment});
     } else {
       res.json({ message: "Comment fail" });
     }

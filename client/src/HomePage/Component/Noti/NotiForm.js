@@ -86,18 +86,21 @@ function TodoForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     // if (!props.edit) {
-    const id = Math.floor(Math.random() * 10000);
+    //const id = Math.floor(Math.random() * 10000);
     axios.post("http://localhost:5000/post/create", {
-      id: id,
+      id: input,
       content: input,
       lop: sessionStorage.getItem("item"),
+      comment: [
+       ],
     });
 
     props.onSubmit({
-      id: id,
+      id: input,
       content: input,
       comment: [],
     });
+   
     // } else {
     //   axios.patch(`http://localhost:5000/post/update/${props.edit.id}`, {
     //     content: input,

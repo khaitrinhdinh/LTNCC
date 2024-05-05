@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import NotiForm from "./NotiForm";
 import { RiCloseCircleLine } from "react-icons/ri";
-import { TiEdit } from "react-icons/ti";
 import styled from "styled-components";
 import Comment from "./Comment";
 import axios from "axios";
@@ -101,10 +100,10 @@ const Todo = ({ role, todos, removeTodo, updateTodo }) => {
   const handleSubmit = (id) => {
     console.log(id);
     axios.patch(`http://localhost:5000/post/comment/${id}`, {
-      msv: sessionStorage.getItem("msv"),
+      mssv: sessionStorage.getItem("mssv"),
       cmt: cmt,
     });
-    const newCmt = { msv: sessionStorage.getItem("msv"), cmt: cmt };
+    const newCmt = { mssv: sessionStorage.getItem("mssv"), cmt: cmt };
     for (let i = 0; i < todos.length; i++) {
       if (todos[i].id === id) {
         todos[i].comment.push(newCmt);

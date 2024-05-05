@@ -45,8 +45,8 @@ function TodoList(props) {
       await axios
         .get(`http://localhost:5000/post/${item}`)
         .then((response) => {
-          console.log(response.data);
-          setTodos(response.data.getpost);
+          console.log(response.data.ListPosts);
+          setTodos(response.data.ListPosts);
         })
         .catch((err) => {
           console.log(err);
@@ -61,7 +61,7 @@ function TodoList(props) {
       .get(`http://localhost:5000/post/${item}`)
       .then((response) => {
         console.log(response.data);
-        setTodos(response.data.getpost);
+        setTodos(response.data.ListPosts);
       })
       .catch((err) => {
         console.log(err);
@@ -77,10 +77,11 @@ function TodoList(props) {
     setTodos(newTodos);
   };
 
-  const removeTodo = async (id) => {
-    await axios.delete(`http://localhost:5000/post/delete/${id}`);
-    const removedArr = [...todos].filter((todo) => todo.id !== id);
+  const removeTodo = async (_id) => {
+    await axios.delete(`http://localhost:5000/post/delete/${_id}`);
+    const removedArr = [...todos].filter((todo) => todo._id !== _id);
     setTodos(removedArr);
+    window.location.reload();
   };
   const role = props.role;
   if (role !== "student") {

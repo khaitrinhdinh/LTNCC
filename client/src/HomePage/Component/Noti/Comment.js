@@ -26,10 +26,7 @@ const Comment_id = styled.p`
   line-height: 2.1rem;
   font-weight: bold;
 `;
-const Comment_title = styled.p`
-  // text-align: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-`;
+
 const Cmt = styled.div`
   background-color: white;
   padding: 1rem 1rem;
@@ -45,7 +42,7 @@ const Comment = ({ comments }) => {
   return comments.map((cmt, index) => (
     <Comment_site key={index}>
       <Cmt>
-        <Comment_id>{cmt.msv}:</Comment_id>
+        <Comment_id>{cmt.mssv}:</Comment_id>
         <Comment_content>{cmt.cmt}</Comment_content>
       </Cmt>
     </Comment_site>

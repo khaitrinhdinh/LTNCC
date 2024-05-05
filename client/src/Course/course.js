@@ -106,9 +106,11 @@ class Course extends Component {
                         ))}
                 </div>
                 {role === "admin" && (
-                    <Link to={"/home/courses-addcourse/add"}>
-                        <button>Thêm Môn Học</button>
+                      <Link to='/home/courses-addcourse/add' className='btn btn-primary custom'>
+                      <span className='fa fa-plus'></span>  Thêm môn học
                     </Link>
+                    
+                   
                 )}
             </div>
         );

@@ -1,6 +1,6 @@
 // NPM packages
 import { collection, query, where, doc } from "firebase/firestore";
-import { addDoc, getDoc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
+import { addDoc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 // Project files
 import { fireStore } from "./firebase.js";
@@ -94,7 +94,20 @@ export async function deleteDocument(path, id) {
   }
   return payload;
 }
-
+export async function updateDocumentNoti(path, id, {mssv,cmt}) {
+  let payload = { message: null, error: null, loading: true };
+  try {
+    const documentPath = doc(fireStore, path, id);
+    console.log(documentPath);
+    await updateDoc(documentPath, {
+      comment: arrayUnion({mssv: mssv, cmt: cmt})
+    });
+    payload = { message: "updated successfully", error: null, loading: false };
+  } catch (error) {
+    payload = { message: "updated failed", error: error, loading: false };
+  }
+  return payload;
+}
 //TODO: Getlist
 
 export async function getListStudent(className){
@@ -109,6 +122,22 @@ export async function getListStudent(className){
     return students;
   } catch (error) {
     console.log('Error getting students:', error);
+    return [];
+  }
+}
+
+export async function getListPost(className){
+  try {
+    const postsRef = collection(fireStore, 'Posts');
+    const q = query(postsRef, where('lop', '==', className));
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+    querySnapshot.forEach((doc) => {
+      posts.push({ id: doc.id, ...doc.data() });
+    });
+    return posts;
+  } catch (error) {
+    console.log('Error getting posts:', error);
     return [];
   }
 }
