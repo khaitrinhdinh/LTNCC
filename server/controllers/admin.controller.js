@@ -29,7 +29,6 @@ export const createAdmin = async (req, res) => {
     const createAd = await createDocumentWithId(`Admins`, id, dataWithoutId);
     await createCollectionAtPath(`Admins/${id}`, "MONHOC")
     await createDocumentWithId(`Admins/${id}/MONHOC`, "221", {MONHOC:[]})
-    createCollectionAtPath(`Admins/${id}`, 'manage');
     res.json({message: "Create admin successfully!"});
     
   } catch (error) {
@@ -156,7 +155,12 @@ export const createCourse = async(req, res) => {
 
     const createMonhocCourse = await createDocumentWithId(`Courses`, req.body.mamonhoc, {NAME: req.body.tenmonhoc});
     const creteDANHSACHLOP = await createCollectionAtPath(`Courses/${req.body.mamonhoc}`, "DANHSACHLOP")
-    const createLop = await createDocumentWithId(`Courses/${req.body.mamonhoc}/DANHSACHLOP`, req.body.lop, {IDGV:"", SINHVIEN:{}})
+    
+    const lops = req.body.lop.split(",");
+
+    lops.forEach(async (lop) => {
+      const createLop = await createDocumentWithId(`Courses/${req.body.mamonhoc}/DANHSACHLOP`, lop, {IDGV:"", SINHVIEN:{}})
+    })
     res.status(200).json({ message: "Course created successfully" });
   }catch(error){
     res.status(500).json({ message: "Internal server error" });

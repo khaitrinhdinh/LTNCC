@@ -57,7 +57,8 @@ class AddForm4 extends Component {
                     lop: this.state.lop,
                 })
             if(resultCAPI.status === 200){
-                alert("Thêm giảng viên thành công!");
+                alert("Thêm môn học thành công!");
+                window.location.reload();
             }else{
                 throw new Error("Failed to create course ");
             }

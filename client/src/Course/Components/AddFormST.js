@@ -65,12 +65,14 @@ class AddStudentForm extends Component {
         .then((response) => {
             const courses = response.data.data;
             let isDuplicateMssv = false;
-            courses.forEach((course) => {
-                if (course.SINHVIEN[mssv]) {
-                    isDuplicateMssv = true;
-                    return;
-                }
-            });
+            if(courses.SINHVIEN !== undefined){
+                courses.forEach((course) => {
+                    if (course.SINHVIEN[mssv]) {
+                        isDuplicateMssv = true;
+                        return;
+                    }
+                }); 
+            }
 
             if (isDuplicateMssv) {
                 alert("Sinh viên đã tồn tại trong danh sách.");

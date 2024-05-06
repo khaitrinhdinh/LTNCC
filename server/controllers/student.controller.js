@@ -137,6 +137,7 @@ export const getClass = async (req, res) => {
 
 export const createCourseST = async (req,res) => {
   try{
+    console.log("okok")
     const getresult = await getStudentKeyByMSSV(req.params.id);
     const readMonhocStudent = await readCollection(`Students/${getresult}/MONHOC`);
     let maxId = 0;

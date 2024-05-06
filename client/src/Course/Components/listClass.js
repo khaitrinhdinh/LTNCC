@@ -49,25 +49,31 @@ class InfoClassStudent extends Component {
                 )
             )
             .then(responses => {
-                const allStudents = [];
-                responses.forEach(response => {
-                    const studentMSSVs = Object.keys(response.data.class.SINHVIEN);
-                    const studentPromises = studentMSSVs.map(studentMSSV =>
-                        CallApi(`student/mssv/${studentMSSV}`, "GET", null)
-                    );
-                    Promise.all(studentPromises)
-                    .then(studentResponses => {
-                        const students = studentResponses.map(
-                            studentResponse => studentResponse.data.studentData
-                        );
-                        allStudents.push(...students);
-                        this.setState({ students: allStudents, loading: false });
-                    })
-                    .catch(error => {
-                        console.error("Error fetching student data:", error);
-                        this.setState({ error: error, loading: false });
+                    const allStudents = [];
+                    responses.forEach(response => {
+                        const sinhVienObject = response.data.class.SINHVIEN;
+                        const studentMSSVs = Object.keys(sinhVienObject);
+                        
+                        if (studentMSSVs.length === 0) {
+                            console.log("Dữ liệu sinh viên trống");
+                        } else {
+                            const studentPromises = studentMSSVs.map(studentMSSV =>
+                                CallApi(`student/mssv/${studentMSSV}`, "GET", null)
+                            );
+                            Promise.all(studentPromises)
+                            .then(studentResponses => {
+                                const students = studentResponses.map(
+                                    studentResponse => studentResponse.data.studentData
+                                );
+                                allStudents.push(...students);
+                                this.setState({ students: allStudents, loading: false });
+                            })
+                            .catch(error => {
+                                console.error("Lỗi khi lấy dữ liệu sinh viên:", error);
+                                this.setState({ error: error, loading: false });
+                            });
+                        }
                     });
-                });
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
@@ -116,16 +122,8 @@ class InfoClassStudent extends Component {
         const role = sessionStorage.getItem("role");
         const { match } = this.props;
         const { mamonhoc, lop } = match.params;
-
-        if (loading) {
-            return <div>Loading...</div>;
-        }
-
-        if (error) {
-            return <div>Error: {error.message}</div>;
-        }
-
         return (
+
             <div className="Container">
                 <Title>Danh sách sinh viên</Title>
                 <Infor_site>
@@ -138,7 +136,7 @@ class InfoClassStudent extends Component {
                                 <th>Ngày Sinh</th>
                                 <th>Giới Tính</th>
                                 {role === "teacher" && <th>Chi tiết</th>}
-                                {role === "teacher" && <th>Xóa</th>} {/* Add Delete column */}
+                                {role === "teacher" && <th>Xóa</th>}
                             </tr>
                         </thead>
                         <tbody>
