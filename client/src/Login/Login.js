@@ -147,9 +147,11 @@ class Login extends Component {
       sessionStorage.setItem("khoa", response.data.khoa);
       
       this.setState({ isLogin: !!localStorage.getItem("accessToken") });
+      alert("đăng nhập thành công")
       }
       catch(error) {
         console.log(error);
+        alert("sai tài khoản hoặc mật khẩu")
       };
   };
 
