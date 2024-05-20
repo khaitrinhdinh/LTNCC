@@ -119,7 +119,7 @@ class AddForm5 extends Component {
 
         return (
             <div className='container'>
-                <Title>Choose Teacher and Class</Title>
+                <Title>Thêm giảng viên</Title>
                 <Infor_site> 
                 <form onSubmit={this.handleSubmit}>
                     <div>

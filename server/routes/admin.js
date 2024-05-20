@@ -12,6 +12,7 @@ import {
   getCoursebyID,
   updateTeacherCourse,
   updateStudentCourse,
+  getNameCourse,
 } from "../controllers/admin.controller.js";
 
 
@@ -33,7 +34,7 @@ router.get("/admin/:id", getAdminDetail);
 router.get("/admin/getcourse/:mamonhoc", getCoursebyID)
 router.patch("/admin/update-teacherCourse/:mamonhoc/:lop", updateTeacherCourse)
 router.patch("/admin/update-courseStudent/:mamonhoc/:lop", updateStudentCourse)
-
+router.get("/course/name/:courseid", getNameCourse);
 router.get("/admin", getAllAdmin);
 
 export default router;

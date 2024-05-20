@@ -123,6 +123,7 @@ export const getCourse = async(req, res)=>{
 }
 export const getClass = async (req, res) => {
   console.log(req.params.mmh);
+  console.log(req.params.lop);
   try{
     const {data, error} = await readDocument(`Courses/${req.params.mmh}/DANHSACHLOP`,req.params.lop)
     if(error){

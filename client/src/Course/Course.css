@@ -110,31 +110,40 @@
   .monhoc-container {
     display: flex;
     flex-wrap: wrap;
+    gap: 20px;
     justify-content: center;
-    background-color: white;
-    padding: 2rem;
-    width: 60%;
-    border-radius: 10px;
-    background-color: whitesmoke;
-    margin: auto;
 }
 
 .monhoc-item {
-    width: 200px;
-    height: 100px;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.monhoc-item:hover {
-    background-color: #f0f0f0;
+    text-decoration: none;
+    color: inherit;
+    width: 250px;
 }
 
 .monhoc-content {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
     text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.monhoc-content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.monhoc-content h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.monhoc-content p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
   

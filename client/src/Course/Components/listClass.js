@@ -103,18 +103,18 @@ class InfoClassStudent extends Component {
     }
 
     handleDeleteStudent = (mssv, lop) => {
-        console.log(lop);
         const { match } = this.props;
-        const { mamonhoc} = match.params;
+        const { mamonhoc } = match.params;
 
-        
-        CallApi(`admin/delete_student_course/${mamonhoc}/${lop}/${mssv}`, "DELETE", null)
-            .then(() => {
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error("Error deleting student:", error);
-            });
+        if (window.confirm("Bạn có chắc chắn muốn xóa sinh viên này không?")) {
+            CallApi(`admin/delete_student_course/${mamonhoc}/${lop}/${mssv}`, "DELETE", null)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error("Error deleting student:", error);
+                });
+        }
     }
 
     render() {
@@ -135,8 +135,7 @@ class InfoClassStudent extends Component {
                                 <th>Họ và Tên</th>
                                 <th>Ngày Sinh</th>
                                 <th>Giới Tính</th>
-                                {role === "teacher" && <th>Chi tiết</th>}
-                                {role === "teacher" && <th>Xóa</th>}
+                                {(role === "teacher" || role === "admin") && <th>Hành động</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -147,7 +146,9 @@ class InfoClassStudent extends Component {
                                     <td>{student.name}</td>
                                     <td>{student.birthday}</td>
                                     <td>{student.gender}</td>
-                                    {role === "teacher" && (
+                                    {(role === "teacher" || role === "admin") && (
+                                    <td>
+                                        {role === "teacher" && (
                                         <td>
                                             <Link to={`/home/course/detail/${mamonhoc}/${lop}/${student.mssv}`}>
                                                 Chi tiết
@@ -160,6 +161,8 @@ class InfoClassStudent extends Component {
                                                 Xóa
                                             </button>
                                         </td>
+                                    )}  
+                                    </td>
                                     )}
                                 </tr>
                             ))}

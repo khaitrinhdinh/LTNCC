@@ -222,6 +222,17 @@ export const updateStudentCourse = async (req, res)=>{
     };
     const updateSinhvienResult = await updateDocument(`Courses/${req.params.mamonhoc}/DANHSACHLOP`, req.params.lop, updatedObject)
   }catch{
+    console.error("Error updating student course:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+}
+export const getNameCourse = async (req, res) => {
+  try{
+    console.log(req.params.courseid);
+    const readCourseResult = await readDocument(`Courses`, req.params.courseid);
+    res.json({courseName: readCourseResult.data});
+  }catch{
 
   }
+
 }
